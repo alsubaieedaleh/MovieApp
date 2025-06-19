@@ -1,0 +1,10 @@
+<select
+#langSelect
+    class=" p-1 rounded bg-primary"
+    (change)="changeLanguage($event)"
+    [value]="currentLang"
+>
+  @for (lang of languages; track lang) {
+    <option [value]="lang">{{ lang }}</option>
+  }
+</select>
