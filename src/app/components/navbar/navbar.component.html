@@ -2,8 +2,21 @@
 <h3 class="font-bold">Movie App</h3>
 <div class="flex gap-2 items-center">
     <app-language-dropdown></app-language-dropdown>
-    <img src="/assets/Icons/icon _heart_.svg" alt="heart icon" class="w-6 h-6">
-    <p>watchlist</p>
+ <p>
+
+     watchList
+ </p>
+    <div class="relative">
+  <img src="/assets/Icons/icon _heart_.svg" class="w-6 h-6">
+  @if(tmdbWatchlist.watchlistCount() > 0){
+
+      <span 
+        class="absolute -top-2 -right-2 bg-primary text-black text-xs px-2 rounded-full">
+        {{ tmdbWatchlist.watchlistCount() }}
+    </span>
+}
+</div>
+
 </div>
 
 </div>

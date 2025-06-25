@@ -1,1 +1,15 @@
-<p>search-results works!</p>
+<div class="p-4">
+  <app-search-box (search)="onSearch($event)"></app-search-box>
+</div>
+<div class="flex flex-wrap gap-4 justify-start p-4">
+  @if (movies() && movies()!.length > 0) {
+    @for (movie of movies()!; track movie.id) {
+      <app-card
+        [movie]="movie"
+        (onFavorite)="addToWatchlist(movie)"
+      ></app-card>
+    }
+  } @else {
+    <p>No results to display.</p>
+  }
+</div>

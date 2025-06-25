@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LanguageDropdownComponent } from '../languageDropdown/language-dropdown.component';
+import { TmdbWatchlistService } from '../../services/watchlist.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,5 +10,6 @@ import { LanguageDropdownComponent } from '../languageDropdown/language-dropdown
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+constructor(public tmdbWatchlist: TmdbWatchlistService) {}
 
 }

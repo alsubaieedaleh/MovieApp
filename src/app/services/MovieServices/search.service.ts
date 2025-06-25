@@ -1,4 +1,4 @@
-// src/app/services/MovieServices/movies-list.service.ts
+// src/app/services/search.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -7,33 +7,35 @@ import { delay, switchMap, map } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class MoviesListService {
+export class SearchService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
   constructor(private http: HttpClient) {}
 
-  
-  getMovies(page: number, minDate: string, maxDate: string): Observable<Movie[]> {
-    const params: Record<string, string> = {
+  /**
+   * Search movies by query and optional page.
+   * Adds a 2-second delay before the HTTP request.
+   */
+  searchMovies(query: string, page: number = 1): Observable<Movie[]> {
+    if (!query.trim()) {
+      return of([]); // empty query yields empty results
+    }
+    const params: Record<string,string> = {
       api_key: this.apiKey,
       language: 'en-US',
+      query: query.trim(),
       page: String(page),
-      // Filter by release date if provided
-      primary_release_date_gte: minDate,
-      primary_release_date_lte: maxDate,
-      include_adult: 'false',
-      include_video: 'false',
-      sort_by: 'popularity.desc'
+      include_adult: 'false'
     };
-
     return of(null).pipe(
       delay(2000),
-      switchMap(() =>
-        this.http.get<any>(`${this.apiUrl}/discover/movie`, { params })
-      ),
+      switchMap(() => this.http.get<any>(
+        `${this.apiUrl}/search/movie`,
+        { params }
+      )),
       map(response => {
         if (!response || !Array.isArray(response.results)) {
           return [];
