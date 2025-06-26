@@ -1,6 +1,7 @@
 export interface MovieDetails {
   id: number;
   title: string;
+  name: string;
   release_date: string;
   overview: string;
   genres: { id: number; name: string }[];

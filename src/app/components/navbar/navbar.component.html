@@ -1,8 +1,20 @@
 <div class="bg-primary p-4 flex justify-between">
-    <a href="/">
+       <div class="flex">
 
-        <h3 class="font-bold">Movie App</h3>
-    </a>
+         <h3 class="font-bold">Movie App</h3>
+         <ul class="flex gap-6 items-center ml-8 bg-black px-4 rounded-full">
+           <li>
+             <a [routerLink]="'/tvshows'" class=" text-yellow-200 font-medium transition-colors duration-200">
+               TV Shows
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/'" class="text-yellow-200 h font-medium transition-colors duration-200">
+                Movies
+              </a>
+            </li>
+          </ul>
+        </div>
   <div class="flex gap-2 items-center">
     <app-language-dropdown></app-language-dropdown>
 
@@ -12,6 +24,7 @@
     >
       Watchlist
     </a>
+
 
     <div class="relative">
       <img src="/assets/Icons/icon _heart_.svg" class="w-6 h-6" />

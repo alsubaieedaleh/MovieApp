@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieDetails } from '../../models/movieDetails';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-movie-details-card',
@@ -10,6 +11,7 @@ import { MovieDetails } from '../../models/movieDetails';
   styleUrls: ['./movie-details-card.component.scss'],
 })
 export class MovieDetailsCardComponent {
+  constructor(public router: Router) {}
   /** MovieDetails object from TMDB (nullable until loaded) */
   @Input() movie: MovieDetails | null = null;
 
