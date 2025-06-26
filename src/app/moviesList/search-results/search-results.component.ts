@@ -1,6 +1,6 @@
 // src/app/components/search-results/search-results.component.ts
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SearchService } from '../../services/MovieServices/search.service';
 import { TmdbWatchlistService } from '../../services/watchlist.service';
 import { CardComponent } from '../../components/card/card.component';
@@ -11,20 +11,19 @@ import { Movie } from '../../models/movie';
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CardComponent, CommonModule, SearchBoxComponent],
+  imports: [CardComponent, CommonModule, SearchBoxComponent, RouterModule],
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
 })
 export class SearchResultsComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  public router = inject(Router);
   private searchService = inject(SearchService);
   private watchlistService = inject(TmdbWatchlistService);
 
   searchResults = signal<Movie[]>([]);
   query = signal<string>('');
-
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       const term = params.get('q')?.trim();
       if (term) {

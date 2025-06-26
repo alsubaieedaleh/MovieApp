@@ -30,7 +30,7 @@ searchResults = signal<Movie[] | undefined>(undefined);
     private moviesService: MoviesListService,
     private tmdbService: TmdbWatchlistService,
     private searchService: SearchService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit(): void {

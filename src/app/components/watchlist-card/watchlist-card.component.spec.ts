@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { watchListComponent } from './watchList.component';
+import { WatchlistCardComponent } from './watchlist-card.component';
 
-describe('watchListComponent', () => {
-  let component: watchListComponent;
-  let fixture: ComponentFixture<watchListComponent>;
+describe('WatchlistCardComponent', () => {
+  let component: WatchlistCardComponent;
+  let fixture: ComponentFixture<WatchlistCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [watchListComponent]
+      imports: [WatchlistCardComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(watchListComponent);
+    fixture = TestBed.createComponent(WatchlistCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,116 @@
+<ng-container *ngIf="movie as m">
+  <div
+    class="group w-full   mx-auto bg-white rounded-2xl shadow-lg p-4 md:p-6 flex flex-col md:flex-row gap-6"
+  >
+     <img
+      *ngIf="m.poster_path"
+      [src]="'https://image.tmdb.org/t/p/w500' + m.poster_path"
+      [alt]="m.title + ' Poster'"
+      class="w-full md:w-1/4 rounded-lg object-cover flex-shrink-0"
+    />
+
+     <div class="flex-1 flex flex-col gap-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold">{{ m.title }}</h2>
+          <p class="text-gray-500 text-sm mt-1">
+            {{ m.release_date | date:'MMM d, yyyy' }}
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button (click)="toggleFavorite()" aria-label="Toggle Favorite">
+            <img
+              src="/assets/Icons/yellow icon _heart_ (1).svg"
+              alt="Favorite"
+              class="w-9 h-9 m-2"
+            />
+          </button>
+          
+        </div>
+      </div>
+
+       <div class="flex items-center">
+        <ng-container *ngFor="let idx of starsArray">
+          <svg
+            *ngIf="idx < filledStars"
+            class="w-6 h-6 text-black"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l
+                 1.286 3.974a1 1 0 00.95.69h4.178c.969 0
+                 1.371 1.24.588 1.81l-3.385 2.46a1 1 0
+                 00-.364 1.118l1.286 3.974c.3.921-.755
+                 1.688-1.54 1.118l-3.385-2.46a1 1 0
+                 00-1.175 0l-3.385 2.46c-.785.57-1.84-.197
+                 -1.54-1.118l1.286-3.974a1 1 0
+                 00-.364-1.118L2.047 9.401c-.783-.57
+                 -.38-1.81.588-1.81h4.178a1 1 0
+                 00.95-.69l1.286-3.974z"
+            />
+          </svg>
+          <svg
+            *ngIf="idx >= filledStars"
+            class="w-6 h-6 text-gray-300"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l
+                 1.286 3.974a1 1 0 00.95.69h4.178c.969 0
+                 1.371 1.24.588 1.81l-3.385 2.46a1 1 0
+                 00-.364 1.118l1.286 3.974c.3.921-.755
+                 1.688-1.54 1.118l-3.385-2.46a1 1 0
+                 00-1.175 0l-3.385 2.46c-.785.57-1.84-.197
+                 -1.54-1.118l1.286-3.974a1 1 0
+                 00-.364-1.118L2.047 9.401c-.783-.57
+                 -.38-1.81.588-1.81h4.178a1 1 0
+                 00.95-.69l1.286-3.974z"
+            />
+          </svg>
+        </ng-container>
+        <span class="text-gray-600 text-sm ml-2">{{ m.vote_count }}</span>
+      </div>
+
+       <p class="text-gray-900 my-2 text-base md:text-2xl mr-20 whitespace-pre-wrap">
+        {{ m.overview }}
+      </p>
+
+       <div class="flex flex-wrap gap-2 my-4">
+        <span
+          *ngFor="let g of m.genres"
+          class="px-3 py-2 bg-primary  rounded-full text-lg" 
+        >
+          {{ g.name }}
+        </span>
+      </div>
+
+       <div class="flex flex-wrap gap-4 text-gray-700">
+        <span><strong>Duration:</strong> {{ m.runtime }} min</span>
+        <span><strong>Language:</strong> {{ m.original_language | uppercase }}</span>
+      </div>
+
+       <div class="flex items-center gap-4 mt-auto">
+        <ng-container *ngFor="let pc of m.production_companies">
+          <img
+            *ngIf="pc.logo_path"
+            [src]="'https://image.tmdb.org/t/p/w200' + pc.logo_path"
+            [alt]="pc.name"
+            class="h-8 object-contain"
+          />
+        </ng-container>
+      </div>
+
+       <a
+        *ngIf="m.homepage"
+        [href]="m.homepage"
+        target="_blank"
+        class="flex mt-4 px-4 py-2 w-32 gap-2 border border-primary rounded-lg hover:bg-gray-100"
+      >
+          Website 
+          <img src="/assets/Icons/🦆 icon _link 2_.svg" alt="External Link" class="w-4 h-4 mt-1 ">
+      </a>
+    </div>
+  </div>
+</ng-container>

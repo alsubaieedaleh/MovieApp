@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+import { WatchlistMovie } from '../models/watchlist-movie';
 
 @Injectable({ providedIn: 'root' })
 export class TmdbWatchlistService {
@@ -18,17 +19,50 @@ export class TmdbWatchlistService {
     // Kick off session flow (redirect-based). Cannot await in constructor.
     this.initSession();
   }
+/**
+ * Fetch the list of movies in the user's watchlist.
+ * @returns Promise<Movie[]>
+ */
+async getWatchlist(): Promise<WatchlistMovie[]> {
+  if (!this.sessionId || this.accountId == null) {
+    throw new Error('Missing sessionId or accountId');
+  }
+
+  try {
+    await this.delay(2000);
+    const response = await firstValueFrom(
+      this.http.get<{ results: WatchlistMovie[] }>(
+        `${this.apiUrl}/account/${this.accountId}/watchlist/movies`,
+        {
+          params: {
+            api_key: this.apiKey,
+            session_id: this.sessionId,
+          },
+        }
+      )
+    );
+       return response.results.map((item:any) => ({
+       id: item.id,
+       title: item.title,
+       date: item.release_date,
+       rate: Math.round((item.vote_average ?? 0) * 10),
+       poster: item.poster_path
+         ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+         : '',
+       voteCount: item.vote_count ?? 0,
+       overview: item.overview ?? '',
+     } as WatchlistMovie));
+  } catch (err) {
+    console.error('getWatchlist error', err);
+    throw err;
+  }
+}
 
   /** Simple delay helper */
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
-  /**
-   * Initialize session: reuse saved or handle redirect or start flow.
-   * This runs but is not awaited by constructor; methods like addToWatchlist
-   * should check session/account before proceeding.
-   */
+ 
   private async initSession(): Promise<void> {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -181,4 +215,26 @@ export class TmdbWatchlistService {
   getWatchlistCount(): number {
     return this.watchlistCount();
   }
+ 
+async removeFromWatchlist(movieId: number): Promise<any> {
+  if (!this.sessionId || this.accountId == null) {
+    return Promise.reject(new Error('TMDB session/account not ready'));
+  }
+  try {
+    await this.delay(2000);
+    const resp = await firstValueFrom(
+      this.http.post<any>(
+        `${this.apiUrl}/account/${this.accountId}/watchlist`,
+        { media_type: 'movie', media_id: movieId, watchlist: false },
+        { params: { api_key: this.apiKey, session_id: this.sessionId } }
+      )
+    );
+    this.watchlistCount.set(Math.max(this.watchlistCount() - 1, 0));
+    return resp;
+  } catch (err) {
+    console.error('removeFromWatchlist error', err);
+    throw err;
+  }
+}
+
 }

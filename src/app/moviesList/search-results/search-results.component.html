@@ -7,6 +7,8 @@
       <app-card
         [movie]="movie"
         (onFavorite)="addToWatchlist(movie)"
+        (click)="router.navigate(['/movie', movie.id])"
+
       ></app-card>
     }
   } @else {

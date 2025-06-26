@@ -1,1 +1,18 @@
-<p>watchList works!</p>
+<div class="p-6">
+  <h2 class="text-3xl font-semibold mb-4">  Watchlist</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (movies().length === 0) {
+    <p>You have no movies in your watchlist.</p>
+  } @else {
+    <div class="grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  ">
+      @for (movie of movies(); track movie.id) {
+        <app-watchlist-card
+          [movie]="movie"
+          (removeFromWatchlist)="onRemove($event)"
+        ></app-watchlist-card>
+      }
+    </div>
+  }
+</div>

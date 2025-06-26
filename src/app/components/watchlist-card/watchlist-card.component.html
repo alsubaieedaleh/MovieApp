@@ -1,0 +1,54 @@
+<div class="group w-4/5 relative flex bg-white rounded-2xl overflow-hidden shadow-lg shadow-solid p-2 m-2">
+  <!-- Poster -->
+  <img
+    [src]="movie.poster"
+    alt="{{ movie.title }} Poster"
+    class="w-48 h-auto rounded-xl object-cover flex-shrink-0"
+  />
+
+  <!-- Content -->
+  <div class="ml-4 flex flex-col  justify-between ">
+    <!-- Header: Title + Heart -->
+    <div class="flex justify-between items-start">
+      <h3 class="text-4xl font-bold leading-tight">{{ movie.title }}</h3>
+      <button (click)="toggleFavorite()" class="ml-2">
+        <img
+          [src]="'/assets/Icons/yellow icon _heart_ (1).svg'"
+          alt="Favorite"
+          class="w-6 h-6"
+        />
+      </button>
+    </div>
+
+    <!-- Release Date -->
+    <p class="text-gray-500 text-sm mt-1">{{ movie.date | date:'MMM d, yyyy' }}</p>
+
+    <!-- Rating Row -->
+    <div class="flex items-center mt-2">
+      <ng-container *ngFor="let idx of starsArray">
+        <svg
+          *ngIf="idx < filledStars"
+          class="w-7 h-7 text-balck"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.974c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.785.57-1.84-.197-1.54-1.118l1.286-3.974a1 1 0 00-.364-1.118L2.047 9.401c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.974z" />
+        </svg>
+        <svg
+          *ngIf="idx >= filledStars"
+          class="w-7 h-7 text-gray-300"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.460a1 1 0 00-.364 1.118l1.286 3.974c.3.921-.755 1.688-1.540 1.118l-3.385-2.460a1 1 0 00-1.175 0l-3.385 2.460c-.785.570-1.840-.197-1.540-1.118l1.286-3.974a1 1 0 00-.364-1.118L2.047 9.401c-.783-.570-.380-1.810.588-1.810h4.178a1 1 0 00.950-.690l1.286-3.974z" />
+        </svg>
+      </ng-container>
+      <span class="text-gray-600 text-sm ml-2">{{ movie.voteCount }}</span>
+    </div>
+
+    <!-- Description -->
+    <p class="text-gray-700 text-xl mt-2 line-clamp-4">
+      {{ movie.overview }}
+    </p>
+  </div>
+</div>
