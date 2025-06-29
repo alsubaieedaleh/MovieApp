@@ -1,39 +1,47 @@
+// src/app/services/MovieServices/tv-recommendations.service.ts
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Movie } from '../../models/movie';
 import { catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { LanguageService } from '../language-service.service';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class RecommendationsService {
+@Injectable({ providedIn: 'root' })
+export class TVRecommendationsService {
   private readonly API_URL = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
   recommendations = signal<Movie[]>([]);
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private languageService: LanguageService
+  ) {}
 
   loadTVRecommendations(tvShowId: number) {
+    const langCode = this.languageService.getLanguage().code;
     const url = `${this.API_URL}/tv/${tvShowId}/recommendations`;
-    const params = { api_key: this.apiKey };
 
-    this.http.get<{ results: any[] }>(url, { params })
+    this.http
+      .get<{ results: any[] }>(url, { params: { api_key: this.apiKey, language: langCode } })
       .pipe(
-        map(res => res.results.map(tv => ({
-          id: tv.id,
-          title: tv.name,
-          poster: `https://image.tmdb.org/t/p/w500${tv.poster_path}`,
-          rate: tv.vote_average,
-          date: tv.first_air_date,
-        }))),
+        map(res =>
+          res.results.map(tv => ({
+            id: tv.id,
+            title: tv.name,
+            poster: tv.poster_path
+              ? `https://image.tmdb.org/t/p/w500${tv.poster_path}`
+              : '',
+            rate: tv.vote_average,
+            date: tv.first_air_date
+          } as Movie))
+        ),
         catchError(err => {
-          console.error('Failed to fetch recommendations:', err);
+          console.error('Failed to fetch TV recommendations:', err);
           return of([]);
         })
       )
-      .subscribe(mapped => this.recommendations.set(mapped));
+      .subscribe(list => this.recommendations.set(list));
   }
 }

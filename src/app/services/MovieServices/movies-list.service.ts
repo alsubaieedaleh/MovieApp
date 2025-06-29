@@ -5,23 +5,25 @@ import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { delay, switchMap, map } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
+import { LanguageService } from '../language-service.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class MoviesListService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private languageService: LanguageService
+  ) {}
 
-  
   getMovies(page: number, minDate: string, maxDate: string): Observable<Movie[]> {
+    const langCode = this.languageService.getLanguage().code;
+
     const params: Record<string, string> = {
       api_key: this.apiKey,
-      language: 'en-US',
+      language: langCode,
       page: String(page),
-      // Filter by release date if provided
       primary_release_date_gte: minDate,
       primary_release_date_lte: maxDate,
       include_adult: 'false',

@@ -1,15 +1,12 @@
 <div class="group relative w-52 rounded-2xl overflow-hidden bg-white m-2 flex flex-col">
-  <!-- Poster Container -->
-  <div class="relative">
-    <!-- Poster Image -->
-    <img
+   <div class="relative">
+     <img
       [src]="movie().poster"
       alt="Movie Poster"
       class="w-full h-auto object-cover"
     />
 
-    <!-- Rating Circle (absolute over image) -->
-    <div class="absolute -bottom-5 left-2 w-10 h-10">
+     <div class="absolute -bottom-5 left-2 w-10 h-10">
       <svg viewBox="0 0 36 36" class="w-full h-full">
         <circle
           class="text-black"
@@ -44,8 +41,7 @@
       </svg>
     </div>
 
-    <!-- Top-right menu icon -->
-    <button
+     <button
       class="absolute top-3 right-3 bg-white/60 backdrop-blur-md p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
     >
       <svg class="w-5 h-5 text-gray-700" fill="currentColor">
@@ -56,8 +52,7 @@
     </button>
   </div>
 
-  <!-- Details -->
-  <div class="p-3 flex justify-between items-start mt-4">
+   <div class="p-3 flex justify-between items-start mt-4">
     <div>
       <h3 class="font-bold text-lg leading-tight">{{ movie().title }}</h3>
       <p class="text-gray-500 text-sm">{{ movie().date }}</p>

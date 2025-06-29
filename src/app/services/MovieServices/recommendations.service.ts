@@ -1,26 +1,29 @@
- 
+// src/app/services/recommendations.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, map } from 'rxjs';
 import { Movie } from '../../models/movie';
+import { LanguageService } from '../language-service.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class RecommendationsService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private languageService: LanguageService
+  ) {}
 
-  
   getRecommendations(movieId: number): Observable<Movie[]> {
+    const langCode = this.languageService.getLanguage().code;
+
     const url = `${this.apiUrl}/movie/${movieId}/recommendations`;
     const params = {
       api_key: this.apiKey,
-      language: 'en-US',
-      page: 1
+      language: langCode,
+      page: '1'
     };
 
     return this.http.get<any>(url, { params }).pipe(

@@ -6,7 +6,7 @@ import { TmdbWatchlistService } from '../../services/watchlist.service';
 import { MovieDetails } from '../../models/movieDetails';
 import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../../components/card/card.component';
-import { RecommendationsService } from '../../services/TVServices/recommendations.service';
+import { TVRecommendationsService } from '../../services/TVServices/recommendations.service';
 import { Movie } from '../../models/movie';
 
 @Component({
@@ -30,7 +30,7 @@ export class TVShowsDetailsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private tmdbService: TmdbWatchlistService,
-    private recommendationsService: RecommendationsService
+    private recommendationsService: TVRecommendationsService
   ) {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {

@@ -5,31 +5,33 @@ import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { delay, switchMap, map } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
+import { LanguageService } from '../language-service.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SearchService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private languageService: LanguageService
+  ) {}
 
-  /**
-   * Search movies by query and optional page.
-   * Adds a 2-second delay before the HTTP request.
-   */
   searchMovies(query: string, page: number = 1): Observable<Movie[]> {
     if (!query.trim()) {
-      return of([]); // empty query yields empty results
+      return of([]);
     }
+
+    const langCode = this.languageService.getLanguage().code;
+
     const params: Record<string,string> = {
       api_key: this.apiKey,
-      language: 'en-US',
+      language: langCode,
       query: query.trim(),
       page: String(page),
       include_adult: 'false'
     };
+
     return of(null).pipe(
       delay(2000),
       switchMap(() => this.http.get<any>(
