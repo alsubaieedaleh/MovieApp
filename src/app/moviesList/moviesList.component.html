@@ -1,14 +1,14 @@
 <div class="flex flex-col gap-4 p-4">
-  <!-- Hero Section -->
-  <div class="flex flex-col bg-gray-200 gap-4 p-4 rounded-xl">
-    <h1 class="text-4xl font-semibold px-9 pt-9">Welcome to our movie app</h1>
+   <div class="flex flex-col bg-gray-200 gap-4 p-4 rounded-xl">
+    <h1 class="text-4xl font-semibold px-9 pt-9">      {{ 'welcomeTitle'   | translate }}
+    </h1>
     <p class="font-semibold pl-9">
-      Millions of movies, TV shows and people to discover. Explore now.
+      {{ 'welcomeSubtitle' | translate }}
     </p>
     <div class="flex items-center px-9 pb-6">
     <input
   type="text"
-  placeholder="Search for movies"
+  placeholder="{{ 'searchPlaceholder' | translate }}"
   class="flex-grow border border-gray-300 rounded-2xl px-4 py-4"
   [value]="searchTerm()"
   (input)="searchTerm.set($any($event.target).value)"
@@ -19,7 +19,7 @@
   class="bg-primary text-black text-xl px-8 py-4 ml-6 rounded-2xl"
   (click)="goToSearch()"
 >
-  Search
+  {{ 'searchBtn' | translate }}
 </button>
 
     </div>
@@ -28,7 +28,7 @@
 
 
   <div   class="flex flex-col gap-4">
-    <h2 class="text-4xl font-semibold p-9">Now Playing</h2>
+    <h2 class="text-4xl font-semibold p-9">{{ 'nowPlaying' | translate }}</h2>
 
     <div class="flex flex-wrap gap-4 justify-start px-6">
       <app-card

@@ -31,7 +31,7 @@ export class LanguageDropdownComponent implements OnInit {
   const langCode = select.value;                        
   const lang = this.languages.find(l => l.code === langCode)!;
   this.langService.setLanguage(lang);
- 
+ window.location.reload(); 
 }
 
 }

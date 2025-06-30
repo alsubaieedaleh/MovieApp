@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { Router } from '@angular/router';
 import { SearchBoxComponent } from '../components/search-box/search-box.component';
-
+import { TranslatePipe } from '../pipes/translate.pipe';
 @Component({
   selector: 'app-movies-list',
   standalone: true,
-  imports: [CardComponent, CommonModule,SearchResultsComponent,SearchBoxComponent], // CardComponent is in template via selector
+  imports: [CardComponent, CommonModule,SearchResultsComponent,SearchBoxComponent, TranslatePipe    ],  
   templateUrl: './moviesList.component.html',
   styleUrls: ['./moviesList.component.scss'],
 })
@@ -21,8 +21,7 @@ export class MoviesListComponent implements OnInit {
   movies = signal<Movie[]>([]);
   currentPage = signal<number>(1); 
 
-  // For search
-  searchTerm = signal<string>('');
+   searchTerm = signal<string>('');
 searchResults = signal<Movie[] | undefined>(undefined);
   searchPage = signal<number>(1);
 
@@ -34,13 +33,12 @@ searchResults = signal<Movie[] | undefined>(undefined);
   ) {}
 
   ngOnInit(): void {
-    // Initially load now-playing
-    this.loadMovies(this.currentPage());
+     this.loadMovies(this.currentPage());
   }
 
   loadMovies(page: number) {
     this.currentPage.set(page);
-    this.searchResults.set(undefined); // clear any search
+    this.searchResults.set(undefined);   
     const minDate = '2023-01-01';
     const maxDate = '2025-12-31';
 
@@ -55,13 +53,12 @@ goToSearch() {
   onSearch() {
     const q = this.searchTerm().trim();
     if (!q) {
-      // empty: clear results and reload now-playing
-      this.searchResults.set(undefined);
+       this.searchResults.set(undefined);
       this.loadMovies(1);
       return;
     }
     this.searchPage.set(1);
-    this.searchResults.set([]); // optionally clear UI or show loading state
+    this.searchResults.set([]); 
     this.searchService.searchMovies(q, this.searchPage()).subscribe(
       (results: Movie[]) => {
       this.searchResults.set(results);
@@ -77,7 +74,7 @@ goToSearch() {
     const q = this.searchTerm().trim();
     if (!q) return;
     this.searchPage.set(page);
-    this.searchResults.set([]); // clear or show loading
+    this.searchResults.set([]);   
     this.searchService.searchMovies(q, page).subscribe( 
       (results: Movie[]) => {
       this.searchResults.set(results);

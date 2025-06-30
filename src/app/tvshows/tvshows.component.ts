@@ -6,11 +6,12 @@ import { Movie } from '../models/movie';
 import { CardComponent } from '../components/card/card.component';
 import { TmdbWatchlistService } from '../services/watchlist.service';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @Component({
   selector: 'app-tvshows',
   standalone: true,
-  imports: [CommonModule, CardComponent,  ],
+  imports: [CommonModule, CardComponent,TranslatePipe  ],
   templateUrl: './tvshows.component.html',
   styleUrls: ['./tvshows.component.scss']
 })
