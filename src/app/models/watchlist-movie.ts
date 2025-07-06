@@ -6,4 +6,5 @@ export interface WatchlistMovie {
   rate: number;       
   vote_count: number;   
   overview: string;     
+  media_type: "tv" | "movie";  
 }

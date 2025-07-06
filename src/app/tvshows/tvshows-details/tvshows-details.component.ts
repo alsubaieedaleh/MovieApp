@@ -43,7 +43,7 @@ export class TVShowsDetailsComponent {
 
   addToWatchlist(id: number) {
     if (!id) return;
-    this.tmdbService.addToWatchlist("tv", id, true)
+    this.tmdbService.addTVToWatchlist( id )
       .then(() => console.log(`${id} added to watchlist.`))
       .catch(err => console.error('Watchlist error', err));
   }

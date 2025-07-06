@@ -42,7 +42,7 @@ export class TVShowsComponent implements OnInit {
       return;
     }
     this.watchlistService
-      .addToWatchlist("tv", show.id, true)
+      .addTVToWatchlist( show.id)
       .then(() => console.log(`"${show.title}" added to watchlist.`))
       .catch((err) => console.error('Watchlist error', err));
   }

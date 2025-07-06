@@ -91,7 +91,7 @@ export class MoviesListComponent implements OnInit {
       return;
     }
     this.tmdbService
-      .addToWatchlist("movie", movie.id, true)
+      .addMovieToWatchlist( movie.id)
       .then(() => console.log(`${movie.title} added to watchlist.`))
       .catch((err) => console.error('Watchlist error', err));
   }

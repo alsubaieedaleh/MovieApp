@@ -24,20 +24,23 @@
      <app-language-dropdown></app-language-dropdown>
 
      <span class="font-semibold text-sm">({{ currentLangCode }})</span>
-
-    <a routerLink="/watchlist" class="font-semibold underline cursor-pointer">
-      Watchlist
-    </a>
-
+     
+     <div class="">
+       <img src="/assets/Icons/icon _heart_.svg" class="w-6 h-6" alt="watchlist icon" />
+      
+    </div>
     <div class="relative">
-      <img src="/assets/Icons/icon _heart_.svg" class="w-6 h-6" alt="watchlist icon" />
-      @if (tmdbWatchlist.watchlistCount() > 0) {
-      <span
-        class="absolute -top-2 -right-2 bg-primary text-black text-xs px-2 rounded-full"
-      >
-        {{ tmdbWatchlist.watchlistCount() }} 
-      </span>
-    }
+
+      <a routerLink="/watchlist" class="font-semibold underline cursor-pointer mr-5">
+        Watchlist
+      </a>
+       @if (tmdbWatchlist.watchlistCount() > 0) {
+         <span
+         class="absolute -top-2 -right-2 bg-white text-black text-xs px-2 rounded-sm"
+         >
+         {{ tmdbWatchlist.watchlistCount() }} 
+        </span>
+      }
     </div>
   </div>
 </div>

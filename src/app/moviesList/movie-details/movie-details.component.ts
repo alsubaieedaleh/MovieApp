@@ -53,7 +53,7 @@ export class MovieDetailsComponent {
       console.warn('Missing movie ID');
       return;
     }
-    this.tmdbService.addToWatchlist("movie", id, true)
+    this.tmdbService.addMovieToWatchlist(id)
       .then(() => console.log(`${id} added to watchlist.`))
       .catch(err => console.error('Watchlist error', err));
   }

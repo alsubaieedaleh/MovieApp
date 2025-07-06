@@ -1,3 +1,4 @@
+// src/app/services/tmdb-watchlist.service.ts
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -10,7 +11,6 @@ export class TmdbWatchlistService {
   watchlistCount = signal(0);
   private readonly apiKey = environment.tmdb.apiKey;
   private readonly apiUrl = 'https://api.themoviedb.org/3';
-
   private sessionId: string | null = null;
   private accountId: number | null = null;
 
@@ -21,12 +21,13 @@ export class TmdbWatchlistService {
     this.initSession();
   }
 
-    async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
+  // Fetch movies or TV watchlist
+  async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
     this.ensureSession();
     const lang = this.languageService.getLanguage().code;
     const params = new HttpParams()
       .set('api_key', this.apiKey)
-      .set('session_id', this.sessionId!)
+      .set('session_id', this.sessionId!)  
       .set('language', lang);
 
     const resp = await firstValueFrom(
@@ -36,62 +37,60 @@ export class TmdbWatchlistService {
       )
     );
 
-      return resp.results.map((item) => ({
+    return resp.results.map(item => ({
       id: item.id,
       title: item.title ?? item.name,
       date: item.release_date ?? item.first_air_date ?? '',
       rate: Math.round((item.vote_average ?? 0) * 10),
-      poster_path: item.poster_path
-        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-        : '',
+      poster_path: item.poster_path ?
+        `https://image.tmdb.org/t/p/w500${item.poster_path}` : '',
       vote_count: item.vote_count ?? 0,
       overview: item.overview ?? '',
+      media_type: type === 'movies' ? 'movie' : 'tv',
     }));
   }
 
-      async addToWatchlist(
-    mediaType: 'movie' | 'tv',
-    mediaId: number,
-    watch: boolean
-  ): Promise<any> {
-    this.ensureSession();
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('session_id', this.sessionId!);
-    const body = { media_type: mediaType, media_id: mediaId, watchlist: watch };
+private async toggleWatchlist(
+  mediaType: 'movie' | 'tv',
+  mediaId: number,
+  watch: boolean
+): Promise<any> {
+  this.ensureSession();
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('session_id', this.sessionId!);
 
-    const resp = await firstValueFrom(
-      this.http.post<any>(
-        `${this.apiUrl}/account/${this.accountId}/watchlist`,
-        body,
-        { params }
-      )
-    );
+  const body = {
+    media_type: mediaType,
+    media_id: mediaId,
+    watchlist: watch
+  };
 
-    // adjust proper count depending on media type
-    this.watchlistCount.update(c =>
-      watch ? c + 1 : Math.max(c - 1, 0)
-    );
-    return resp;
+  return firstValueFrom(
+    this.http.post<any>(
+      `${this.apiUrl}/account/${this.accountId}/watchlist`,
+      body,
+      { params }
+    )
+  );
+}
+
+
+  // Explicit remove methods
+  async addMovieToWatchlist(movieId: number) {
+    return this.toggleWatchlist('movie', movieId, true);
   }
 
+  async removeMovieFromWatchlist(movieId: number) {
+    return this.toggleWatchlist('movie', movieId, false);
+  }
 
-  async removeFromWatchlist(movieId: number): Promise<any> {
-    this.ensureSession();
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('session_id', this.sessionId!);
+  async addTVToWatchlist(tvId: number) {
+    return this.toggleWatchlist('tv', tvId, true);
+  }
 
-    const body = { media_type: 'movie', media_id: movieId, watchlist: false };
-    const resp = await firstValueFrom(
-      this.http.post<any>(
-        `${this.apiUrl}/account/${this.accountId}/watchlist`,
-        body,
-        { params }
-      )
-    );
-    this.watchlistCount.update((count) => Math.max(count - 1, 0));
-    return resp;
+  async removeTVFromWatchlist(tvId: number) {
+    return this.toggleWatchlist('tv', tvId, false);
   }
 
   getWatchlistCount(): number {
@@ -107,35 +106,30 @@ export class TmdbWatchlistService {
   private async initSession(): Promise<void> {
     try {
       const params = new URLSearchParams(window.location.search);
-      const requestToken = params.get('request_token');
+      const token = params.get('request_token');
       const approved = params.get('approved');
-
       const savedSession = localStorage.getItem('tmdb_session_id');
       const savedAccount = localStorage.getItem('tmdb_account_id');
-
       if (savedSession && savedAccount) {
         this.sessionId = savedSession;
         this.accountId = Number(savedAccount);
         await this.fetchWatchlistCount();
         return;
       }
-
-      if (requestToken && approved === 'true') {
-        await this.finalizeSession(requestToken);
+      if (token && approved === 'true') {
+        await this.finalizeSession(token);
         window.history.replaceState({}, '', window.location.pathname);
         return;
       }
-
       const tokenResp = await firstValueFrom(
         this.http.get<{ request_token: string }>(
           `${this.apiUrl}/authentication/token/new`,
           { params: new HttpParams().set('api_key', this.apiKey) }
         )
       );
-      const redirectTo = encodeURIComponent(window.location.href);
       window.location.href =
         `https://www.themoviedb.org/authenticate/${tokenResp.request_token}` +
-        `?redirect_to=${redirectTo}`;
+        `?redirect_to=${encodeURIComponent(window.location.href)}`;
     } catch (err) {
       console.error('initSession error', err);
     }
@@ -151,7 +145,6 @@ export class TmdbWatchlistService {
     );
     this.sessionId = sessResp.session_id;
     localStorage.setItem('tmdb_session_id', sessResp.session_id);
-
     await this.fetchAccountId();
     await this.fetchWatchlistCount();
   }
@@ -161,11 +154,9 @@ export class TmdbWatchlistService {
     const accResp = await firstValueFrom(
       this.http.get<{ id: number }>(
         `${this.apiUrl}/account`,
-        {
-          params: new HttpParams()
+        { params: new HttpParams()
             .set('api_key', this.apiKey)
-            .set('session_id', this.sessionId!)
-        }
+            .set('session_id', this.sessionId!) }
       )
     );
     this.accountId = accResp.id;
@@ -173,15 +164,13 @@ export class TmdbWatchlistService {
     return accResp.id;
   }
 
-    private async fetchWatchlistCount(): Promise<number> {
-    // Fetches MOVIES count only; you could optionally fetch TV count separately
+  private async fetchWatchlistCount(): Promise<number> {
     this.ensureSession();
     const lang = this.languageService.getLanguage().code;
     const params = new HttpParams()
       .set('api_key', this.apiKey)
       .set('session_id', this.sessionId!)
       .set('language', lang);
-
     const resp = await firstValueFrom(
       this.http.get<{ total_results: number }>(
         `${this.apiUrl}/account/${this.accountId}/watchlist/movies`,
@@ -190,4 +179,5 @@ export class TmdbWatchlistService {
     );
     this.watchlistCount.set(resp.total_results);
     return resp.total_results;
-  } }
+  }
+}

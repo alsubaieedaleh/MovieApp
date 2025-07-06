@@ -1,3 +1,4 @@
+// src/app/moviesList/watchList/watchList.component.ts
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmdbWatchlistService } from '../../services/watchlist.service';
@@ -12,28 +13,37 @@ import { WatchlistCardComponent } from '../../components/watchlist-card/watchlis
   styleUrls: ['./watchList.component.scss'],
 })
 export class WatchListComponent implements OnInit {
-  movies = signal<WatchlistMovie[]>([]);
+  items = signal<WatchlistMovie[]>([]);
   loading = signal(true);
 
   constructor(private tmdbService: TmdbWatchlistService) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      const TVresults = await this.tmdbService.getWatchlist('tv');
-      const Moviesresults = await this.tmdbService.getWatchlist('movies');
-      this.movies.set([...Moviesresults, ...TVresults]);
+      const [movies, tv] = await Promise.all([
+        this.tmdbService.getWatchlist('movies'),
+        this.tmdbService.getWatchlist('tv'),
+      ]);
+      this.items.set([...movies, ...tv]);
     } catch (error) {
       console.error('Failed to load watchlist', error);
     } finally {
       this.loading.set(false);
     }
   }
-  async onRemove(movieId: number) {
+
+  async onRemove(item: WatchlistMovie) {
     try {
-      await this.tmdbService.removeFromWatchlist(movieId);
-      const TVresults = await this.tmdbService.getWatchlist('tv');
-      const Moviesresults = await this.tmdbService.getWatchlist('movies');
-      this.movies.set([...Moviesresults, ...TVresults]);
+      if (item.media_type === 'tv') {
+        await this.tmdbService.removeTVFromWatchlist(item.id);
+      } else {
+        await this.tmdbService.removeMovieFromWatchlist(item.id);
+      }
+      const [movies, tv] = await Promise.all([
+        this.tmdbService.getWatchlist('movies'),
+        this.tmdbService.getWatchlist('tv'), 
+      ]);
+      this.items.set([...movies, ...tv]);
     } catch (err) {
       console.error('Error removing from watchlist', err);
     }

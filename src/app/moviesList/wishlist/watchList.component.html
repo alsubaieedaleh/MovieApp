@@ -3,14 +3,23 @@
 
   @if (loading()) {
     <p>Loading...</p>
-  } @else if (movies().length === 0) {
-    <p>You have no movies in your watchlist.</p>
+  } @else if (items().length === 0) {
+   
+    
+
+<div class="flex justify-center items-center">
+      <p class="text-gray-500">Your watchlist is empty.</p>
+      <img src="/assets/Icons/icon _heart_.svg" class="w-24 h-24 ml-4" alt="watchlist icon" />
+</div>
+
+
+
   } @else {
     <div class="grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  ">
-      @for (movie of movies(); track movie.id) {
+      @for (movie of items(); track movie.id) {
         <app-watchlist-card
           [movie]="movie"
-          (removeFromWatchlist)="onRemove($event)"
+          (removeFromWatchlist)="onRemove(movie)"
         ></app-watchlist-card>
       }
     </div>

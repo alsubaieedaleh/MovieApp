@@ -4,4 +4,5 @@ export interface Movie {
   title: string;
   rate: number;        
   poster: string;      
+  media_type: string;
 }
