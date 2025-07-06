@@ -1,24 +1,35 @@
-// src/app/moviesList/watchList/watchList.component.ts
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { LanguageService } from '../../services/language-service.service';
 import { WatchlistMovie } from '../../models/watchlist-movie';
 import { WatchlistCardComponent } from '../../components/watchlist-card/watchlist-card.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
-  selector: 'app-watchList',
+  selector: 'app-watchlist',
   standalone: true,
-  imports: [CommonModule, WatchlistCardComponent],
-  templateUrl: './watchList.component.html',
-  styleUrls: ['./watchList.component.scss'],
+  imports: [CommonModule, WatchlistCardComponent, TranslatePipe],
+  templateUrl: './watchlist.component.html',
+  styleUrls: ['./watchlist.component.scss'],
 })
 export class WatchListComponent implements OnInit {
   items = signal<WatchlistMovie[]>([]);
   loading = signal(true);
 
-  constructor(private tmdbService: TmdbWatchlistService) {}
+  constructor(
+    private tmdbService: TmdbWatchlistService,
+    private languageService: LanguageService,
+   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    // Reload on language change
+    this.languageService.currentLang$.subscribe(() => this.loadList());
+    this.loadList();
+  }
+
+  private async loadList() {
+    this.loading.set(true);
     try {
       const [movies, tv] = await Promise.all([
         this.tmdbService.getWatchlist('movies'),
@@ -39,11 +50,7 @@ export class WatchListComponent implements OnInit {
       } else {
         await this.tmdbService.removeMovieFromWatchlist(item.id);
       }
-      const [movies, tv] = await Promise.all([
-        this.tmdbService.getWatchlist('movies'),
-        this.tmdbService.getWatchlist('tv'), 
-      ]);
-      this.items.set([...movies, ...tv]);
+      this.loadList();
     } catch (err) {
       console.error('Error removing from watchlist', err);
     }

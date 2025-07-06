@@ -1,9 +1,8 @@
 // src/app/pipes/translate.pipe.ts
-import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
-import { LanguageService } from '../services/language-service.service';
-import { Subscription } from 'rxjs';
+import { Pipe, PipeTransform } from '@angular/core';
+import { LanguageService } from "../services/language-service.service"; 
 
-const TRANSLATIONS: Record<string, Record<string, string>> = {
+const TRANSLATIONS: Record<string, any> = {
   en: {
     welcomeTitle: 'Welcome to our movie app',
     welcomeSubtitle: 'Millions of movies, TV shows and people to discover. Explore now.',
@@ -11,7 +10,12 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nowPlaying: 'Now Playing',
     searchBtn: 'Search',
     popularTVShows: 'Popular TV Shows',
-
+    WATCHLIST: {
+      TITLE: 'Watchlist',
+      LOADING: 'Loading...',
+      EMPTY: 'No items in your watchlist',
+      BACK_HOME: 'Back to Home',
+    }
   },
   ar: {
     welcomeTitle: 'مرحباً بك في تطبيق الأفلام',
@@ -20,16 +24,26 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nowPlaying: 'يعرض الآن',
     searchBtn: 'ابحث',
     popularTVShows: 'المسلسلات التلفزيونية الشهيرة',
-
+    WATCHLIST: {
+      TITLE: 'قائمة المشاهدة',
+      LOADING: 'جارٍ التحميل...',
+      EMPTY: 'لا توجد عناصر في قائمة المشاهدة',
+      BACK_HOME: 'العودة إلى الصفحة الرئيسية',
+    }
   },
   fr: {
     welcomeTitle: 'Bienvenue sur notre application de films',
-    welcomeSubtitle: 'Des millions de films, séries et personnes à découvrir. Explorez maintenant.',
+    welcomeSubtitle: "Des millions de films, séries et personnes à découvrir. Explorez maintenant.",
     searchPlaceholder: 'Rechercher des films',
     nowPlaying: 'À l\'affiche',
     searchBtn: 'Recherche',
     popularTVShows: 'Séries TV Populaires',
-
+    WATCHLIST: {
+      TITLE: 'Liste de surveillance',
+      LOADING: 'Chargement...',
+      EMPTY: 'Aucun élément dans votre liste de surveillance',
+      BACK_HOME: 'Retour à l\'accueil',
+    }
   },
   zh: {
     welcomeTitle: '欢迎来到我们的电影应用',
@@ -38,27 +52,29 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nowPlaying: '热映中',
     searchBtn: '搜索',
     popularTVShows: '热门电视剧',
-
+    WATCHLIST: {
+      TITLE: '观看列表',
+      LOADING: '加载中...',
+      EMPTY: '观看列表中没有项目',
+      BACK_HOME: '返回首页',
+    }
   }
 };
- 
-@Pipe({ name: 'translate', standalone: true })
-export class TranslatePipe implements PipeTransform, OnDestroy {
-  private langCode = this.langService.getLanguage().code;
-  private sub: Subscription;
 
-  constructor(private langService: LanguageService) {
-    this.sub = this.langService.currentLang$.subscribe(lang => {
-      this.langCode = lang.code;
-    });
-  }
+@Pipe({ name: 'translate', standalone: true })
+
+export class TranslatePipe implements PipeTransform {
+  constructor(private langService: LanguageService) {}
 
   transform(key: string): string {
-    return (TRANSLATIONS[this.langCode] && TRANSLATIONS[this.langCode][key]) 
-      || key;
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    const langCode = this.langService.getLanguage().code;
+    const translationTree = TRANSLATIONS[langCode] || {};
+    // support nested keys, e.g. 'WATCHLIST.TITLE'
+    const parts = key.split('.');
+    let result: any = translationTree;
+    for (const part of parts) {
+      result = result ? result[part] : undefined;
+    }
+    return result ?? key;
   }
 }

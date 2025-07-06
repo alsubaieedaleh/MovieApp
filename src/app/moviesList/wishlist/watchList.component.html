@@ -1,28 +1,32 @@
 <div class="p-6">
-  <h2 class="text-3xl font-semibold mb-4">  Watchlist</h2>
+  <h2 class="text-3xl font-semibold mb-4">
+    {{ "WATCHLIST.TITLE" | translate }}
+  </h2>
 
   @if (loading()) {
-    <p>Loading...</p>
+  <p>Loading...</p>
   } @else if (items().length === 0) {
-   
-    
 
-<div class="flex justify-center items-center flex-col mt-40">
-  <img src="/assets/Icons/🦆 icon _heart slash_.svg" class="w-44 h-44 mb-8" alt="watchlist icon" />
-      <p class="text-gray-900 text-xl my-5">No Movies in watch list </p>
-      <a href="/" class="bg-primary px-32 py-2  mt-2 rounded-xl">Back to Home</a> 
-</div>
-
-
+  <div class="flex justify-center items-center flex-col mt-40">
+    <img
+      src="/assets/Icons/🦆 icon _heart slash_.svg"
+      class="w-44 h-44 mb-8"
+      alt="watchlist icon"
+    />
+    <p class="text-gray-900 text-xl my-5">{{ 'WATCHLIST.EMPTY' | translate }}</p>
+    <a href="/" class="bg-primary px-32 py-2 mt-2 rounded-xl">
+      {{ "WATCHLIST.BACK_HOME" | translate }}</a
+    >
+  </div>
 
   } @else {
-    <div class="grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  ">
-      @for (movie of items(); track movie.id) {
-        <app-watchlist-card
-          [movie]="movie"
-          (removeFromWatchlist)="onRemove(movie)"
-        ></app-watchlist-card>
-      }
-    </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+    @for (movie of items(); track movie.id) {
+    <app-watchlist-card
+      [movie]="movie"
+      (removeFromWatchlist)="onRemove(movie)"
+    ></app-watchlist-card>
+    }
+  </div>
   }
 </div>
