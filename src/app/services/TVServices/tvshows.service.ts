@@ -32,6 +32,7 @@ export class TVShowsService {
             id: show.id,
             date: show.first_air_date,
             title: show.name,
+            rate: Math.round((show.vote_average ?? 0) * 10),
             poster: show.poster_path
               ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
               : '',

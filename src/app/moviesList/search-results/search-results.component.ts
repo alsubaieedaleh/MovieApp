@@ -49,7 +49,7 @@ export class SearchResultsComponent implements OnInit {
 
   addToWatchlist(movie: Movie) {
     if (movie.id == null) return;
-    this.watchlistService.addToWatchlist(movie.id)
+    this.watchlistService.addToWatchlist("movie", movie.id, true)
       .then(() => console.log(`${movie.title} added to watchlist.`))
       .catch(err => console.error('Watchlist error', err));
   }

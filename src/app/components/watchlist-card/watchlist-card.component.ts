@@ -10,7 +10,7 @@ import { WatchlistMovie } from '../../models/watchlist-movie';
   styleUrls: ['./watchlist-card.component.scss'],
 })
 export class WatchlistCardComponent {
-  @Input() movie!: WatchlistMovie;           // expects { poster, title, date, overview, rate (0-100), voteCount }
+  @Input() movie!: WatchlistMovie;          
   @Output() favoriteToggled = new EventEmitter<void>();
 
   isFavorite = false;
@@ -20,7 +20,7 @@ toggleFavorite() {
   this.removeFromWatchlist.emit(this.movie.id);
 }
 
-   get filledStars(): number {
+get filledStars(): number {
     return Math.round(this.movie.rate / 20);
   }
 

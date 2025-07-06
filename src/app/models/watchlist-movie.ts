@@ -2,8 +2,8 @@ export interface WatchlistMovie {
   id: number;
   title: string;
   date: string;         
-  poster: string;       
+  poster_path: string;       
   rate: number;       
-  voteCount: number;   
+  vote_count: number;   
   overview: string;     
 }
