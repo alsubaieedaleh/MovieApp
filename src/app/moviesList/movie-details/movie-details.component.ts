@@ -14,7 +14,7 @@ import { CardComponent } from '../../components/card/card.component';
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, MovieDetailsCardComponent, CardComponent],
+  imports: [CommonModule, RouterModule, MovieDetailsCardComponent, CardComponent, ],
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.scss']
 })

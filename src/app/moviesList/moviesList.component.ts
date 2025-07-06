@@ -8,16 +8,18 @@ import { CardComponent } from '../components/card/card.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../components/loading/loading.component';
 @Component({
   selector: 'app-movies-list',
   standalone: true,
-  imports: [CardComponent, CommonModule, TranslatePipe],
+  imports: [CardComponent, CommonModule, TranslatePipe, LoadingSpinnerComponent   ],
   templateUrl: './moviesList.component.html',
   styleUrls: ['./moviesList.component.scss'],
 })
 export class MoviesListComponent implements OnInit {
   movies = signal<Movie[]>([]);
   currentPage = signal<number>(1);
+  loading = signal(true);  // ← track load state
 
   searchTerm = signal<string>('');
   searchResults = signal<Movie[] | undefined>(undefined);
@@ -35,6 +37,8 @@ export class MoviesListComponent implements OnInit {
   }
 
   loadMovies(page: number) {
+    this.loading.set(true);
+
     this.currentPage.set(page);
     this.searchResults.set(undefined);
     const minDate = '2023-01-01';
@@ -42,7 +46,11 @@ export class MoviesListComponent implements OnInit {
 
     this.moviesService
       .getMovies(page, minDate, maxDate)
-      .subscribe((data) => this.movies.set(data));
+         .subscribe({
+        next: data => this.movies.set(data),
+        complete: () => this.loading.set(false),
+        error: () => this.loading.set(false)
+      });
   }
   goToSearch() {
     const q = this.searchTerm().trim();

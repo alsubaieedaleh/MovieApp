@@ -5,11 +5,12 @@ import { LanguageService } from '../../services/language-service.service';
 import { WatchlistMovie } from '../../models/watchlist-movie';
 import { WatchlistCardComponent } from '../../components/watchlist-card/watchlist-card.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
 
 @Component({
   selector: 'app-watchlist',
   standalone: true,
-  imports: [CommonModule, WatchlistCardComponent, TranslatePipe],
+  imports: [CommonModule, WatchlistCardComponent, TranslatePipe, LoadingSpinnerComponent],
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss'],
 })

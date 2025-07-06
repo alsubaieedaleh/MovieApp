@@ -1,3 +1,12 @@
+  <div>
+
+  <ng-container *ngIf="loading(); else showGrid">
+      <app-loading-spinner></app-loading-spinner>
+    </ng-container>
+
+    <!-- MOVIES GRID -->
+    <ng-template #showGrid>
+
 <div class="p-6">       
   <h2 class="text-3xl font-semibold mb-4">{{'popularTVShows' | translate}}</h2> 
   <div class="flex flex-wrap gap-4">
@@ -9,8 +18,7 @@
     ></app-card>
   </div>
 
-  <!-- Simple Pagination -->
-<div class="flex justify-center items-center space-x-2 mt-6">
+ <div class="flex justify-center items-center space-x-2 mt-6">
       <button
         class="p-2 rounded hover:bg-gray-100"
         [disabled]="currentPage() === 1"
@@ -43,4 +51,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </button>
+</div>
+</div>
+</ng-template>
 </div>

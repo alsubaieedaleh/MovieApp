@@ -26,7 +26,12 @@
   </div>
 
 
+  <ng-container *ngIf="loading(); else showGrid">
+      <app-loading-spinner></app-loading-spinner>
+    </ng-container>
 
+    <!-- MOVIES GRID -->
+    <ng-template #showGrid>
   <div   class="flex flex-col gap-4">
     <h2 class="text-4xl font-semibold p-9">{{ 'nowPlaying' | translate }}</h2>
 
@@ -76,5 +81,6 @@
       </button>
     </div>
   </div>
- 
+     </ng-template>
+
 </div>

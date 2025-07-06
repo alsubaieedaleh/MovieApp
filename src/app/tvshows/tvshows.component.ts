@@ -6,17 +6,19 @@ import { CardComponent } from '../components/card/card.component';
 import { TmdbWatchlistService } from '../services/watchlist.service';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../components/loading/loading.component';
 
 @Component({
   selector: 'app-tvshows',
   standalone: true,
-  imports: [CommonModule, CardComponent, TranslatePipe],
+  imports: [CommonModule, CardComponent, TranslatePipe, LoadingSpinnerComponent],
   templateUrl: './tvshows.component.html',
   styleUrls: ['./tvshows.component.scss'],
 })
 export class TVShowsComponent implements OnInit {
   tvShows = signal<Movie[]>([]);
   currentPage = signal(1);
+  loading = signal(true);   
 
   constructor(
     private tvShowsService: TVShowsService,
@@ -29,10 +31,12 @@ export class TVShowsComponent implements OnInit {
   }
 
   loadTVShows(page: number) {
+    this.loading.set(true);
     this.currentPage.set(page);
     this.tvShowsService.getPopularTVShows(page).subscribe({
       next: (data) => this.tvShows.set(data),
       error: (err) => console.error('Failed to load TV shows', err),
+      complete: () => this.loading.set(false),
     });
   }
 
