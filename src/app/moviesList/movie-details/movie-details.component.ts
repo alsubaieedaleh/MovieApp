@@ -1,5 +1,4 @@
-// src/app/moviesList/movie-details/movie-details.component.ts
-
+ 
 import { Component, Signal, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';

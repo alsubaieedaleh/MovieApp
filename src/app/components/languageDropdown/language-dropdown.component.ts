@@ -1,12 +1,12 @@
-// src/app/components/language-dropdown/language-dropdown.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Language, LanguageService } from '../../services/language-service.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-language-dropdown',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './language-dropdown.component.html',
   styleUrls: ['./language-dropdown.component.scss'],
 })

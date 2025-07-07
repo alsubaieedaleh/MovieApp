@@ -1,6 +1,8 @@
  <select
   class="p-1 rounded bg-primary"
-  [value]="currentLang.code"
+  
+  [ngModel]="currentLang.code"
+
   (change)="changeLanguage($event)"
 >
   @for (  lang of languages; track  lang.code) {
