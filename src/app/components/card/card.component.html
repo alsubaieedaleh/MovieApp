@@ -3,7 +3,8 @@
      <img
       [src]="movie().poster"
       alt="Movie Poster"
-      class="w-full h-auto object-cover"
+      class="w-full h-auto object-cover cursor-pointer"
+      (click)="navigateToDetails()"
     />
 
      <div class="absolute -bottom-5 left-2 w-10 h-10">

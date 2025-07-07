@@ -14,8 +14,7 @@
       *ngFor="let show of tvShows(); let i = index"
       [movie]="show"
       (onFavorite)="addToWatchlist(show)"
-        (click)="router.navigate(['/tvshow', show.id])"
-    ></app-card>
+     ></app-card>
   </div>
 
  <div class="flex justify-center items-center space-x-2 mt-6">

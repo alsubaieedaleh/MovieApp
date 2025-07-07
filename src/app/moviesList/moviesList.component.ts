@@ -19,7 +19,7 @@ import { LoadingSpinnerComponent } from '../components/loading/loading.component
 export class MoviesListComponent implements OnInit {
   movies = signal<Movie[]>([]);
   currentPage = signal<number>(1);
-  loading = signal(true);  // ← track load state
+  loading = signal(true);  
 
   searchTerm = signal<string>('');
   searchResults = signal<Movie[] | undefined>(undefined);
@@ -30,7 +30,7 @@ export class MoviesListComponent implements OnInit {
     private tmdbService: TmdbWatchlistService,
     private searchService: SearchService,
     public router: Router
-  ) {}
+  ) {} 
 
   ngOnInit(): void {
     this.loadMovies(this.currentPage());

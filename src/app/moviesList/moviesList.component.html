@@ -40,8 +40,6 @@
         *ngFor="let movie of movies(); let i = index"
         [movie]="movie"
         (onFavorite)="addToWatchlist(movie)"
-        (click)="router.navigate(['/movie', movie.id])"
-
       ></app-card>
     </div>
 
