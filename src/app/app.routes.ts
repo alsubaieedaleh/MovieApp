@@ -1,17 +1,12 @@
 import { Routes } from '@angular/router';
-import { MoviesListComponent } from './moviesList/moviesList.component';
-import { SearchResultsComponent } from './moviesList/search-results/search-results.component';
-import { WatchListComponent } from './moviesList/wishlist/watchList.component';
-import { MovieDetailsComponent } from './moviesList/movie-details/movie-details.component';
-import { TVShowsComponent } from './tvshows/tvshows.component';
-import { TVShowsDetailsComponent } from './tvshows/tvshows-details/tvshows-details.component';
+ 
 
 export const routes: Routes = [
-  { path: '', component: MoviesListComponent },
-  { path: 'search', component: SearchResultsComponent },
-    { path: 'watchlist', component: WatchListComponent },  
-      { path: 'movie/:id', component: MovieDetailsComponent },
-      { path: 'tvshows', component: TVShowsComponent },
-      { path: 'tvshow/:id', component: TVShowsDetailsComponent },
+  { path: '', loadChildren: () => import('./moviesList/moviesList.component').then(m => m.MoviesListComponent) },
+  { path: 'search', loadChildren: () => import('./moviesList/search-results/search-results.component').then(m => m.SearchResultsComponent) },
+  { path: 'watchlist', loadChildren: () => import('./moviesList/wishlist/watchList.component').then(m => m.WatchListComponent) },
+  { path: 'movie/:id', loadChildren: () => import('./moviesList/movie-details/movie-details.component').then(m => m.MovieDetailsComponent) },
+  { path: 'tvshows', loadChildren: () => import('./tvshows/tvshows.component').then(m => m.TVShowsComponent) },
+  { path: 'tvshow/:id', loadChildren: () => import('./tvshows/tvshows-details/tvshows-details.component').then(m => m.TVShowsDetailsComponent) },
 
 ];
