@@ -1,5 +1,4 @@
-// src/app/components/search-results/search-results.component.ts
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SearchService } from '../services/MovieServices/search.service';
 import { TmdbWatchlistService } from '../services/watchlist.service';
@@ -16,15 +15,16 @@ import { Movie } from '../models/movie';
   styleUrls: ['./search-results.component.scss'],
 })
 export class SearchResultsComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  public router = inject(Router);
-  private searchService = inject(SearchService);
-  private watchlistService = inject(TmdbWatchlistService);
+  private readonly route = inject(ActivatedRoute);
+  public readonly router = inject(Router);
+  private readonly searchService = inject(SearchService);
+  private readonly watchlistService = inject(TmdbWatchlistService);
 
   searchResults = signal<Movie[]>([]);
   query = signal<string>('');
-   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((params) => {
+
+  ngOnInit(): void {
+     this.route.queryParamMap.subscribe((params) => {
       const term = params.get('q')?.trim();
       if (term) {
         this.query.set(term);

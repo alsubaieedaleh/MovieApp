@@ -1,5 +1,4 @@
-// src/app/components/movies-list/movies-list.component.ts
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Movie } from '../models/movie';
 import { MoviesListService } from '../services/MovieServices/movies-list.service';
 import { TmdbWatchlistService } from '../services/watchlist.service';
@@ -9,28 +8,27 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '../components/loading/loading.component';
+
 @Component({
   selector: 'app-movies-list',
   standalone: true,
-  imports: [CardComponent, CommonModule, TranslatePipe, LoadingSpinnerComponent   ],
+  imports: [CardComponent, CommonModule, TranslatePipe, LoadingSpinnerComponent],
   templateUrl: './moviesList.component.html',
   styleUrls: ['./moviesList.component.scss'],
 })
 export class MoviesListComponent implements OnInit {
   movies = signal<Movie[]>([]);
   currentPage = signal<number>(1);
-  loading = signal(true);  
+  loading = signal(true);
 
   searchTerm = signal<string>('');
   searchResults = signal<Movie[] | undefined>(undefined);
   searchPage = signal<number>(1);
 
-  constructor(
-    private moviesService: MoviesListService,
-    private tmdbService: TmdbWatchlistService,
-    private searchService: SearchService,
-    public router: Router
-  ) {} 
+  private moviesService = inject(MoviesListService);
+  private tmdbService = inject(TmdbWatchlistService);
+  private searchService = inject(SearchService);
+  public router = inject(Router);
 
   ngOnInit(): void {
     this.loadMovies(this.currentPage());
@@ -46,17 +44,19 @@ export class MoviesListComponent implements OnInit {
 
     this.moviesService
       .getMovies(page, minDate, maxDate)
-         .subscribe({
+      .subscribe({
         next: data => this.movies.set(data),
         complete: () => this.loading.set(false),
         error: () => this.loading.set(false)
       });
   }
+
   goToSearch() {
     const q = this.searchTerm().trim();
     if (!q) return;
     this.router.navigate(['/search'], { queryParams: { q } });
   }
+
   onSearch() {
     const q = this.searchTerm().trim();
     if (!q) {
@@ -99,7 +99,7 @@ export class MoviesListComponent implements OnInit {
       return;
     }
     this.tmdbService
-      .addMovieToWatchlist( movie.id)
+      .addMovieToWatchlist(movie.id)
       .then(() => console.log(`${movie.title} added to watchlist.`))
       .catch((err) => console.error('Watchlist error', err));
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmdbWatchlistService } from '../services/watchlist.service';
 import { LanguageService } from '../services/language-service.service';
@@ -18,14 +18,11 @@ export class WatchListComponent implements OnInit {
   items = signal<WatchlistMovie[]>([]);
   loading = signal(true);
 
-  constructor(
-    private tmdbService: TmdbWatchlistService,
-    private languageService: LanguageService,
-   ) {}
+  private tmdbService = inject(TmdbWatchlistService);
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
-    // Reload on language change
-    this.languageService.currentLang$.subscribe(() => this.loadList());
+     this.languageService.currentLang$.subscribe(() => this.loadList());
     this.loadList();
   }
 

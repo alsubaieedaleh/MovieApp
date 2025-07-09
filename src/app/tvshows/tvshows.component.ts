@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TVShowsService } from '../services/TVServices/tvshows.service';
 import { Movie } from '../models/movie';
@@ -18,13 +18,11 @@ import { LoadingSpinnerComponent } from '../components/loading/loading.component
 export class TVShowsComponent implements OnInit {
   tvShows = signal<Movie[]>([]);
   currentPage = signal(1);
-  loading = signal(true);   
+  loading = signal(true);
 
-  constructor(
-    private tvShowsService: TVShowsService,
-    private watchlistService: TmdbWatchlistService,
-    public router: Router
-  ) {}
+  private tvShowsService = inject(TVShowsService);
+  private watchlistService = inject(TmdbWatchlistService);
+  public router = inject(Router);
 
   ngOnInit(): void {
     this.loadTVShows(this.currentPage());
@@ -46,7 +44,7 @@ export class TVShowsComponent implements OnInit {
       return;
     }
     this.watchlistService
-      .addTVToWatchlist( show.id)
+      .addTVToWatchlist(show.id)
       .then(() => console.log(`"${show.title}" added to watchlist.`))
       .catch((err) => console.error('Watchlist error', err));
   }

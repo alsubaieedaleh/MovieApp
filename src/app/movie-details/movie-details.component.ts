@@ -1,5 +1,4 @@
- 
-import { Component, Signal, computed, effect, signal } from '@angular/core';
+import { Component, Signal, computed, effect, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MovieDetailsService } from '../services/MovieServices/movie-details.service';
@@ -17,19 +16,19 @@ import { CardComponent } from '../components/card/card.component';
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.scss']
 })
-export class MovieDetailsComponent {
+export class MovieDetailsComponent implements OnInit {
+  private details = inject(MovieDetailsService);
+  private route = inject(ActivatedRoute);
+  public router = inject(Router);
+  public tmdbService = inject(TmdbWatchlistService);
+  private recService = inject(RecommendationsService);
+
   movie$: Signal<MovieDetails | null> = this.details.movie;
   loading$: Signal<boolean> = this.details.loading;
 
   recommendations = signal<Movie[]>([]);
 
-  constructor(
-    private details: MovieDetailsService,
-    private route: ActivatedRoute,
-    public router: Router,
-    public tmdbService: TmdbWatchlistService,
-    private recService: RecommendationsService
-  ) {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.details.loadDetails(id);
@@ -66,7 +65,7 @@ export class MovieDetailsComponent {
 
   navigateToMovieDetails(id: number) {
     this.router.navigate(['/movies', id]);
-     this.details.loadDetails(id);
+    this.details.loadDetails(id);
     this.loadRecommendations(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Signal } from '@angular/core';
+import { Component, Signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TVShowsDetailsService } from '../services/TVServices/tvshows-details.service';
@@ -21,17 +21,17 @@ import { Movie } from '../models/movie';
   templateUrl: './tvshows-details.component.html',
   styleUrls: ['./tvshows-details.component.scss']
 })
-export class TVShowsDetailsComponent {
+export class TVShowsDetailsComponent implements OnInit {
+  private detailsService = inject(TVShowsDetailsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private tmdbService = inject(TmdbWatchlistService);
+  private recommendationsService = inject(TVRecommendationsService);
+
   tvShow$: Signal<MovieDetails | null> = this.detailsService.tvShow;
   recommendations: Signal<Movie[]> = this.recommendationsService.recommendations;
 
-  constructor(
-    private detailsService: TVShowsDetailsService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private tmdbService: TmdbWatchlistService,
-    private recommendationsService: TVRecommendationsService
-  ) {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.detailsService.loadTVShowDetails(id);
@@ -43,7 +43,7 @@ export class TVShowsDetailsComponent {
 
   addToWatchlist(id: number) {
     if (!id) return;
-    this.tmdbService.addTVToWatchlist( id )
+    this.tmdbService.addTVToWatchlist(id)
       .then(() => console.log(`${id} added to watchlist.`))
       .catch(err => console.error('Watchlist error', err));
   }
