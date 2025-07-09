@@ -1,5 +1,4 @@
-// src/app/services/MovieServices/tv-recommendations.service.ts
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Movie } from '../../models/movie';
@@ -14,10 +13,8 @@ export class TVRecommendationsService {
 
   recommendations = signal<Movie[]>([]);
 
-  constructor(
-    private http: HttpClient,
-    private languageService: LanguageService
-  ) {}
+   private http = inject(HttpClient);
+  private languageService = inject(LanguageService);
 
   loadTVRecommendations(tvShowId: number) {
     const langCode = this.languageService.getLanguage().code;

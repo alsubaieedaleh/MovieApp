@@ -1,5 +1,5 @@
 // src/app/services/MovieServices/tvshows.service.ts
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, map } from 'rxjs';
@@ -11,10 +11,9 @@ export class TVShowsService {
   private readonly API_URL = 'https://api.themoviedb.org/3';
   private readonly API_KEY = environment.tmdb.apiKey;
 
-  constructor(
-    private http: HttpClient,
-    private languageService: LanguageService
-  ) {}
+  
+     private http = inject(HttpClient);
+    private languageService = inject(LanguageService);
 
   getPopularTVShows(page: number = 1): Observable<Movie[]> {
     const langCode = this.languageService.getLanguage().code;

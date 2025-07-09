@@ -1,5 +1,5 @@
 // src/app/services/search.service.ts
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
@@ -12,11 +12,9 @@ export class SearchService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
-  constructor(
-    private http: HttpClient,
-    private languageService: LanguageService
-  ) {}
-
+ 
+    private http = inject(HttpClient);
+   private languageService = inject(LanguageService);
   searchMovies(query: string, page: number = 1): Observable<Movie[]> {
     if (!query.trim()) {
       return of([]);

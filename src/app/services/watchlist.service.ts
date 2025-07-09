@@ -1,5 +1,5 @@
 // src/app/services/tmdb-watchlist.service.ts
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { firstValueFrom } from 'rxjs';
@@ -13,16 +13,15 @@ export class TmdbWatchlistService {
   private readonly apiUrl = 'https://api.themoviedb.org/3';
   private sessionId: string | null = null;
   private accountId: number | null = null;
-
+  private http = inject(HttpClient);
+  private languageService = inject(LanguageService);
   constructor(
-    private http: HttpClient,
-    private languageService: LanguageService
+  
   ) {
     this.initSession();
   }
-
-  // Fetch movies or TV watchlist
-  async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
+ 
+   async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
     this.ensureSession();
     const lang = this.languageService.getLanguage().code;
     const params = new HttpParams()

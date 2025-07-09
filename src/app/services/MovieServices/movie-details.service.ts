@@ -1,5 +1,5 @@
 // src/app/services/MovieServices/movie-details.service.ts
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
@@ -11,10 +11,8 @@ export class MovieDetailsService {
   movie   = signal<MovieDetails | null>(null);
   loading = signal(false);
 
-  constructor(
-    private http: HttpClient,
-    private languageService: LanguageService
-  ) {}
+   private http = inject(HttpClient);
+  private languageService = inject(LanguageService);
 
   async loadDetails(movieId: number): Promise<void> {
     this.loading.set(true);
