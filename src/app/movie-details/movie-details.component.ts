@@ -2,13 +2,13 @@
 import { Component, Signal, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MovieDetailsService } from '../../services/MovieServices/movie-details.service';
-import { MovieDetails } from '../../models/movieDetails';
-import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
-import { RecommendationsService } from '../../services/MovieServices/recommendations.service';
-import { Movie } from '../../models/movie';
-import { CardComponent } from '../../components/card/card.component';
+import { MovieDetailsService } from '../services/MovieServices/movie-details.service';
+import { MovieDetails } from '../models/movieDetails';
+import { MovieDetailsCardComponent } from '../components/movie-details-card/movie-details-card.component';
+import { TmdbWatchlistService } from '../services/watchlist.service';
+import { RecommendationsService } from '../services/MovieServices/recommendations.service';
+import { Movie } from '../models/movie';
+import { CardComponent } from '../components/card/card.component';
 
 @Component({
   selector: 'app-movie-details',

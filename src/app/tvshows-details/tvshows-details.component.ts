@@ -1,13 +1,13 @@
 import { Component, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TVShowsDetailsService } from '../../services/TVServices/tvshows-details.service';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
-import { MovieDetails } from '../../models/movieDetails';
-import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
-import { CardComponent } from '../../components/card/card.component';
-import { TVRecommendationsService } from '../../services/TVServices/recommendations.service';
-import { Movie } from '../../models/movie';
+import { TVShowsDetailsService } from '../services/TVServices/tvshows-details.service';
+import { TmdbWatchlistService } from '../services/watchlist.service';
+import { MovieDetails } from '../models/movieDetails';
+import { MovieDetailsCardComponent } from '../components/movie-details-card/movie-details-card.component';
+import { CardComponent } from '../components/card/card.component';
+import { TVRecommendationsService } from '../services/TVServices/recommendations.service';
+import { Movie } from '../models/movie';
 
 @Component({
   selector: 'app-tvshows-details',

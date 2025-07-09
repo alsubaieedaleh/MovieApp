@@ -1,11 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
-import { LanguageService } from '../../services/language-service.service';
-import { WatchlistMovie } from '../../models/watchlist-movie';
-import { WatchlistCardComponent } from '../../components/watchlist-card/watchlist-card.component';
-import { TranslatePipe } from '../../pipes/translate.pipe';
-import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
+import { TmdbWatchlistService } from '../services/watchlist.service';
+import { LanguageService } from '../services/language-service.service';
+import { WatchlistMovie } from '../models/watchlist-movie';
+import { WatchlistCardComponent } from '../components/watchlist-card/watchlist-card.component';
+import { TranslatePipe } from '../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../components/loading/loading.component';
 
 @Component({
   selector: 'app-watchlist',

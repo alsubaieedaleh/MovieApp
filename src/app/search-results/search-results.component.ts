@@ -1,12 +1,12 @@
 // src/app/components/search-results/search-results.component.ts
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SearchService } from '../../services/MovieServices/search.service';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
-import { CardComponent } from '../../components/card/card.component';
-import { SearchBoxComponent } from '../../components/search-box/search-box.component';
+import { SearchService } from '../services/MovieServices/search.service';
+import { TmdbWatchlistService } from '../services/watchlist.service';
+import { CardComponent } from '../components/card/card.component';
+import { SearchBoxComponent } from '../components/search-box/search-box.component';
 import { CommonModule } from '@angular/common';
-import { Movie } from '../../models/movie';
+import { Movie } from '../models/movie';
 
 @Component({
   selector: 'app-search-results',
