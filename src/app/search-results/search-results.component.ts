@@ -1,5 +1,8 @@
-import { Component, computed, inject, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, map, catchError, of, startWith } from 'rxjs';
+
 import { SearchService } from '../services/MovieServices/search.service';
 import { TmdbWatchlistService } from '../services/watchlist.service';
 import { CardComponent } from '../components/card/card.component';
@@ -14,34 +17,34 @@ import { Movie } from '../models/movie';
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
 })
-export class SearchResultsComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  public readonly router = inject(Router);
-  private readonly searchService = inject(SearchService);
-  private readonly watchlistService = inject(TmdbWatchlistService);
+export class SearchResultsComponent {
+  route = inject(ActivatedRoute);
+  router = inject(Router);
+  searchService = inject(SearchService);
+  watchlistService = inject(TmdbWatchlistService);
 
-  searchResults = signal<Movie[]>([]);
-  query = signal<string>('');
+  query = toSignal<string>(
+    this.route.queryParamMap.pipe(
+      map((params) => params.get('q')?.trim() ?? ''),
+      startWith('')
+    )
+  );
 
-  ngOnInit(): void {
-     this.route.queryParamMap.subscribe((params) => {
-      const term = params.get('q')?.trim();
-      if (term) {
-        this.query.set(term);
-        this.fetchSearchResults(term);
-      }
-    });
-  }
+  searchResults = toSignal<Movie[]>(
+    this.route.queryParamMap.pipe(
+      map((params) => params.get('q')?.trim() ?? ''),
+      switchMap((term) =>
+        term ? this.searchService.searchMovies(term, 1) : of([] as Movie[])
+      ),
+      catchError((err) => {
+        console.error('Search error:', err);
+        return of([] as Movie[]);
+      }),
+      startWith([] as Movie[])
+    )
+  );
 
-  fetchSearchResults(term: string) {
-    this.searchService.searchMovies(term, 1).subscribe(
-      (results) => this.searchResults.set(results),
-      (error) => {
-        console.error('Search error:', error);
-        this.searchResults.set([]);
-      }
-    );
-  }
+  movies = computed(() => this.searchResults());
 
   onSearch(term: string) {
     this.router.navigate(['/search'], { queryParams: { q: term } });
@@ -49,10 +52,9 @@ export class SearchResultsComponent implements OnInit {
 
   addToWatchlist(movie: Movie) {
     if (movie.id == null) return;
-    this.watchlistService.addMovieToWatchlist(movie.id)
+    this.watchlistService
+      .addMovieToWatchlist(movie.id)
       .then(() => console.log(`${movie.title} added to watchlist.`))
-      .catch(err => console.error('Watchlist error', err));
+      .catch((err) => console.error('Watchlist error', err));
   }
-
-  movies = computed(() => this.searchResults());
 }

@@ -1,8 +1,7 @@
-// src/app/services/MovieServices/movie-details.service.ts
-import { inject, Injectable, signal } from '@angular/core';
+ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { MovieDetails } from '../../models/movieDetails';
 import { LanguageService } from '../language-service.service';
 
@@ -14,7 +13,7 @@ export class MovieDetailsService {
    private http = inject(HttpClient);
   private languageService = inject(LanguageService);
 
-  async loadDetails(movieId: number): Promise<void> {
+   loadDetails(movieId: number): Observable<MovieDetails> {
     this.loading.set(true);
     try {
       const langCode = this.languageService.getLanguage().code;
@@ -23,10 +22,7 @@ export class MovieDetailsService {
         api_key: environment.tmdb.apiKey,
         language: langCode
       };
-      const resp = await firstValueFrom(
-        this.http.get<MovieDetails>(url, { params })
-      );
-      this.movie.set(resp);
+      return this.http.get<MovieDetails>(url, { params });
     } finally {
       this.loading.set(false);
     }

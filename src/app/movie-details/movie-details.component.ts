@@ -1,40 +1,63 @@
-import { Component, Signal, computed, effect, signal, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Signal, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MovieDetailsService } from '../services/MovieServices/movie-details.service';
 import { MovieDetails } from '../models/movieDetails';
-import { MovieDetailsCardComponent } from '../components/movie-details-card/movie-details-card.component';
 import { TmdbWatchlistService } from '../services/watchlist.service';
 import { RecommendationsService } from '../services/MovieServices/recommendations.service';
 import { Movie } from '../models/movie';
+import { MovieDetailsCardComponent } from '../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../components/card/card.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, finalize, of, switchMap, map } from 'rxjs';
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, MovieDetailsCardComponent, CardComponent, ],
+  imports: [CommonModule, RouterModule, MovieDetailsCardComponent, CardComponent],
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.scss']
 })
-export class MovieDetailsComponent implements OnInit {
-  private details = inject(MovieDetailsService);
+export class MovieDetailsComponent {
+  private detailsService = inject(MovieDetailsService);
   private route = inject(ActivatedRoute);
   public router = inject(Router);
   public tmdbService = inject(TmdbWatchlistService);
   private recService = inject(RecommendationsService);
 
-  movie$: Signal<MovieDetails | null> = this.details.movie;
-  loading$: Signal<boolean> = this.details.loading;
-
+  error = signal<string | null>(null);
+  loading = signal<boolean>(true);
   recommendations = signal<Movie[]>([]);
 
-  ngOnInit(): void {
+  movie$: Signal<MovieDetails | null> = toSignal<MovieDetails | null>(
+    this.route.paramMap.pipe(
+      switchMap((params) => {
+        const id = Number(params.get('id'));
+        if (!id) {
+          this.router.navigate(['/']);
+          return of(null);
+        }
+
+        this.loading.set(true);
+        this.error.set(null);
+
+        return this.detailsService.loadDetails(id).pipe(
+          catchError((err) => {
+            console.error('Error fetching movie:', err); 
+            this.error.set('Failed to load movie details.');
+            return of(null);
+          }),
+          finalize(() => this.loading.set(false))
+        );
+      })
+    ),
+    { initialValue: null }
+  );
+
+  constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      this.details.loadDetails(id);
       this.loadRecommendations(id);
-    } else {
-      this.router.navigate(['/']);
     }
   }
 
@@ -47,7 +70,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   addToWatchlist(id: number) {
-    if (id == null) {
+    if (!id) {
       console.warn('Missing movie ID');
       return;
     }
@@ -59,13 +82,14 @@ export class MovieDetailsComponent implements OnInit {
   loadRecommendations(movieId: number) {
     this.recService.getRecommendations(movieId).subscribe({
       next: (recs) => this.recommendations.set(recs),
-      error: (err) => console.error('Failed to load recommendations:', err)
+      error: (err) => {
+        console.error('Failed to load recommendations:', err);
+        this.error.set('Failed to load recommendations');
+      }
     });
   }
 
   navigateToMovieDetails(id: number) {
     this.router.navigate(['/movies', id]);
-    this.details.loadDetails(id);
-    this.loadRecommendations(id);
   }
 }

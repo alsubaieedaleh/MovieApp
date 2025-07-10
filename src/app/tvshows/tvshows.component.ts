@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TVShowsService } from '../services/TVServices/tvshows.service';
 import { Movie } from '../models/movie';
@@ -7,38 +7,54 @@ import { TmdbWatchlistService } from '../services/watchlist.service';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '../components/loading/loading.component';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, catchError, finalize, of, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-tvshows',
   standalone: true,
-  imports: [CommonModule, CardComponent, TranslatePipe, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    CardComponent,
+    TranslatePipe,
+    LoadingSpinnerComponent
+  ],
   templateUrl: './tvshows.component.html',
   styleUrls: ['./tvshows.component.scss'],
 })
-export class TVShowsComponent implements OnInit {
-  tvShows = signal<Movie[]>([]);
-  currentPage = signal(1);
-  loading = signal(true);
+export class TVShowsComponent {
+  private tvShowsService    = inject(TVShowsService);
+  private watchlistService  = inject(TmdbWatchlistService);
+  public  router            = inject(Router);
 
-  private tvShowsService = inject(TVShowsService);
-  private watchlistService = inject(TmdbWatchlistService);
-  public router = inject(Router);
+   currentPage = signal<number>(1);
 
-  ngOnInit(): void {
-    this.loadTVShows(this.currentPage());
-  }
+   loading = signal<boolean>(false);
 
-  loadTVShows(page: number) {
-    this.loading.set(true);
+   tvShows = toSignal<Movie[]>(
+    toObservable(this.currentPage).pipe(
+       startWith(this.currentPage()),
+
+       switchMap(page => {
+        this.loading.set(true);
+        return this.tvShowsService.getPopularTVShows(page).pipe(
+          catchError(err => {
+            console.error('Failed to load TV shows', err);
+            return of([] as Movie[]);
+          }),
+          finalize(() => this.loading.set(false))
+        );
+      })
+    )
+  );
+
+   movies = () => this.tvShows();
+
+   loadTVShows(page: number) {
     this.currentPage.set(page);
-    this.tvShowsService.getPopularTVShows(page).subscribe({
-      next: (data) => this.tvShows.set(data),
-      error: (err) => console.error('Failed to load TV shows', err),
-      complete: () => this.loading.set(false),
-    });
   }
 
-  addToWatchlist(show: Movie) {
+   addToWatchlist(show: Movie) {
     if (!show.id) {
       console.error('Show ID is missing');
       return;
@@ -46,6 +62,6 @@ export class TVShowsComponent implements OnInit {
     this.watchlistService
       .addTVToWatchlist(show.id)
       .then(() => console.log(`"${show.title}" added to watchlist.`))
-      .catch((err) => console.error('Watchlist error', err));
+      .catch(err => console.error('Watchlist error', err));
   }
 }
