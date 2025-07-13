@@ -1,9 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Movie } from '../../models/movie';
 import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { LanguageService } from '../language-service.service';
 
 @Injectable({ providedIn: 'root' })
@@ -11,16 +11,17 @@ export class TVRecommendationsService {
   private readonly API_URL = 'https://api.themoviedb.org/3';
   private readonly apiKey = environment.tmdb.apiKey;
 
-  recommendations = signal<Movie[]>([]);
-
-   private http = inject(HttpClient);
+  private http = inject(HttpClient);
   private languageService = inject(LanguageService);
 
-  loadTVRecommendations(tvShowId: number) {
+  /**
+   * Fetches TV show recommendations and returns an Observable<Movie[]>
+   */
+  loadTVRecommendations(tvShowId: number): Observable<Movie[]> {
     const langCode = this.languageService.getLanguage().code;
     const url = `${this.API_URL}/tv/${tvShowId}/recommendations`;
 
-    this.http
+    return this.http
       .get<{ results: any[] }>(url, { params: { api_key: this.apiKey, language: langCode } })
       .pipe(
         map(res =>
@@ -36,9 +37,8 @@ export class TVRecommendationsService {
         ),
         catchError(err => {
           console.error('Failed to fetch TV recommendations:', err);
-          return of([]);
+          return of([] as Movie[]);
         })
-      )
-      .subscribe(list => this.recommendations.set(list));
+      );
   }
 }

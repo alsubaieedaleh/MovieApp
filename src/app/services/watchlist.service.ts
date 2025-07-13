@@ -2,7 +2,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { WatchlistMovie } from '../models/watchlist-movie';
 import { LanguageService } from './language-service.service';
 
@@ -21,33 +21,35 @@ export class TmdbWatchlistService {
     this.initSession();
   }
  
-   async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
-    this.ensureSession();
-    const lang = this.languageService.getLanguage().code;
-    const params = new HttpParams()
-      .set('api_key', this.apiKey)
-      .set('session_id', this.sessionId!)  
-      .set('language', lang);
+async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
+  this.ensureSession();
+  const lang = this.languageService.getLanguage().code;
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('session_id', this.sessionId!)
+    .set('language', lang);
 
-    const resp = await firstValueFrom(
-      this.http.get<{ results: any[] }>(
-        `${this.apiUrl}/account/${this.accountId}/watchlist/${type}`,
-        { params }
-      )
-    );
+  const resp = await firstValueFrom(
+    this.http.get<{ results: any[] }>(
+      `${this.apiUrl}/account/${this.accountId}/watchlist/${type}`,
+      { params }
+    )
+  );
 
-    return resp.results.map(item => ({
-      id: item.id,
-      title: item.title ?? item.name,
-      date: item.release_date ?? item.first_air_date ?? '',
-      rate: Math.round((item.vote_average ?? 0) * 10),
-      poster_path: item.poster_path ?
-        `https://image.tmdb.org/t/p/w500${item.poster_path}` : '',
-      vote_count: item.vote_count ?? 0,
-      overview: item.overview ?? '',
-      media_type: type === 'movies' ? 'movie' : 'tv',
-    }));
-  }
+  return resp.results.map(item => ({
+    id: item.id,
+    title: item.title ?? item.name,
+    date: item.release_date ?? item.first_air_date ?? '',
+    rate: Math.round((item.vote_average ?? 0) * 10),
+    poster_path: item.poster_path
+      ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+      : '',
+    vote_count: item.vote_count ?? 0,
+    overview: item.overview ?? '',
+    media_type: type === 'movies' ? 'movie' : 'tv',
+  }));
+}
+
 
 private async toggleWatchlist(
   mediaType: 'movie' | 'tv',
