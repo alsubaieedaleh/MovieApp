@@ -1,17 +1,21 @@
 <div class="p-4">
   <app-search-box (search)="onSearch($event)"></app-search-box>
 </div>
+
 <div class="flex flex-wrap gap-4 justify-start p-4">
-  @if (movies() && movies()!.length > 0) {
+  @if (loading()) {
+    <div class="flex justify-center items-center w-full h-64">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+  } @else if (movies()!.length > 0) {
     @for (movie of movies()!; track movie.id) {
       <app-card
         [movie]="movie"
         (onFavorite)="addToWatchlist(movie)"
         (click)="router.navigate(['/movie', movie.id])"
-
       ></app-card>
     }
   } @else {
-    <p>No results to display.</p>
+    <p>No results found.</p>
   }
 </div>

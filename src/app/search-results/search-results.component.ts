@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, map, catchError, of, startWith } from 'rxjs';
+import { switchMap, map, catchError, of, startWith, tap } from 'rxjs';
 
 import { SearchService } from '../services/MovieServices/search.service';
 import { TmdbWatchlistService } from '../services/watchlist.service';
@@ -9,11 +9,12 @@ import { CardComponent } from '../components/card/card.component';
 import { SearchBoxComponent } from '../components/search-box/search-box.component';
 import { CommonModule } from '@angular/common';
 import { Movie } from '../models/movie';
+import { LoadingSpinnerComponent } from '../components/loading/loading.component';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CardComponent, CommonModule, SearchBoxComponent, RouterModule],
+  imports: [CardComponent, CommonModule, SearchBoxComponent, RouterModule ,LoadingSpinnerComponent],
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
 })
@@ -22,6 +23,7 @@ export class SearchResultsComponent {
   router = inject(Router);
   searchService = inject(SearchService);
   watchlistService = inject(TmdbWatchlistService);
+  readonly loading = signal(false);
 
   query = toSignal<string>(
     this.route.queryParamMap.pipe(
@@ -32,7 +34,9 @@ export class SearchResultsComponent {
 
   searchResults = toSignal<Movie[]>(
     this.route.queryParamMap.pipe(
-      map((params) => params.get('q')?.trim() ?? ''),
+       map((params) => params.get('q')?.trim() ?? ''),
+       tap(() => this.loading.set(true)),
+
       switchMap((term) =>
         term ? this.searchService.searchMovies(term, 1) : of([] as Movie[])
       ),
@@ -40,6 +44,8 @@ export class SearchResultsComponent {
         console.error('Search error:', err);
         return of([] as Movie[]);
       }),
+      tap(() => this.loading.set(false)),
+
       startWith([] as Movie[])
     )
   );

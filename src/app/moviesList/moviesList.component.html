@@ -4,7 +4,7 @@
     <h1 class="text-4xl font-semibold px-9 pt-9">
       {{ 'welcomeTitle' | translate }}
     </h1>
-    <p class="font-semibold pl-9">
+    <p class="font-semibold px-9">
       {{ 'welcomeSubtitle' | translate }}
     </p>
 
@@ -39,7 +39,7 @@
         {{ searchTerm().trim() ? ('searchResults' | translate) : ('nowPlaying' | translate) }}
       </h2>
 
-      <div class="flex flex-wrap gap-4 justify-start px-6">
+      <div class="flex flex-wrap gap-4 justify-start pl-6">
         <app-card
           *ngFor="let movie of (searchResults() ?? movies())"
           [movie]="movie"

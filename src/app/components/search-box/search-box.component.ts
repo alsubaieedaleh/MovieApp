@@ -1,11 +1,12 @@
 // src/app/components/search-box/search-box.component.ts
 import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../pipes/translate.pipe'; 
 
 @Component({
   selector: 'app-search-box',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './search-box.component.html',
 })
 export class SearchBoxComponent {

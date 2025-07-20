@@ -1,6 +1,6 @@
 <ng-container *ngIf="movie as m">
   <div
-    class="group w-full   mx-auto bg-white rounded-2xl shadow-lg p-4 md:p-6 flex flex-col md:flex-row gap-6"
+    class="group w-full   mx-auto bg-white rounded-2xl  p-4 md:p-6 flex flex-col md:flex-row gap-6"
   >
      <img
       *ngIf="m.poster_path"
@@ -75,7 +75,7 @@
         <span class="text-gray-600 text-sm ml-2">{{ m.vote_count }}</span>
       </div>
 
-       <p class="text-gray-900 my-2 text-base md:text-2xl mr-20 whitespace-pre-wrap">
+       <p class="text-gray-900 my-2 text-base md:text-2xl  whitespace-pre-wrap">
         {{ m.overview }}
       </p>
 

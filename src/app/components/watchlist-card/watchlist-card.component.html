@@ -1,30 +1,30 @@
-<div class="group w-4/5 relative flex bg-white rounded-2xl overflow-hidden shadow-lg shadow-solid p-2 m-2">
+<div class="group   relative flex bg-white rounded-2xl overflow-hidden shadow-md shadow-black/30 p-3 m-2 py-10">
   <!-- Poster -->
   <img
     [src]="movie.poster_path"
     alt="{{ movie.title }} Poster"
-    class="w-48 h-auto rounded-xl object-cover flex-shrink-0"
+    class="w-48 h-auto rounded-2xl object-cover flex-shrink-0"
   />
 
   <!-- Content -->
   <div class="ml-4 mr-4 flex flex-col  justify-between ">
     <!-- Header: Title + Heart -->
     <div class="flex justify-between items-start">
-      <h3 class="text-4xl font-bold leading-tight">{{ movie.title }}</h3>
+      <h3 class="text-5xl font-bold leading-tight">{{ movie.title }}</h3>
       <button (click)="toggleFavorite()" class="ml-2">
         <img
           [src]="'/assets/Icons/yellow icon _heart_ (1).svg'"
           alt="Favorite"
-          class="w-6 h-6"
+          class="w-8 h-8"
         />
       </button>
     </div>
 
     <!-- Release Date -->
-    <p class="text-gray-500 text-sm mt-1">{{ movie.date | date:'MMM d, yyyy' }}</p>
+    <p class="text-gray-500 text-sm  ">{{ movie.date | date:'MMM d, yyyy' }}</p>
 
     <!-- Rating Row -->
-    <div class="flex items-center mt-2">
+    <div class="flex items-center  ">
       <ng-container *ngFor="let idx of starsArray">
         <svg
           *ngIf="idx < filledStars"
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Description -->
-    <p class="text-gray-700 text-xl mt-2 line-clamp-4">
+    <p class="font-base text-2xl line-clamp-4 mb-5">
       {{ movie.overview }}
     </p>
   </div>

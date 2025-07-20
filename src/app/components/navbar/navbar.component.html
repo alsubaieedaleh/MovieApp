@@ -1,8 +1,7 @@
-<!-- src/app/components/navbar/navbar.component.html -->
-<div class="bg-primary p-4 flex justify-between">
+ <div class="bg-primary p-4 flex justify-between">
   <div class="flex">
     <h3 class="font-bold">Movie App</h3>
-    <ul class="flex gap-6 items-center ml-8 bg-black px-4 rounded-full">
+    <ul class="flex gap-6 items-center mx-8 bg-black px-4 rounded-full">
       <li>
         <a routerLink="/tvshows"
            class="text-yellow-200 font-medium transition-colors duration-200"
@@ -38,8 +37,8 @@
          <span
          class="absolute -top-2 -right-2 bg-white text-black text-xs px-2 rounded-sm"
          >
-         {{ tmdbWatchlist.watchlistCount() }} 
-        </span>
+{{         tmdbWatchlist.watchlistCount()  
+}}        </span>
       }
     </div>
   </div>

@@ -2,10 +2,12 @@ import { Component , input, output } from '@angular/core';
 import { Movie } from '../../models/movie';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
+
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TruncatePipe],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })

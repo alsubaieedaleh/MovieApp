@@ -1,5 +1,5 @@
 <div class="p-6">
-  <h2 class="text-3xl font-semibold mb-4">
+  <h2 class="text-3xl font-semibold  ">
     {{ "WATCHLIST.TITLE" | translate }}
   </h2>
 
@@ -7,7 +7,7 @@
     <app-loading-spinner></app-loading-spinner>
   } @else if (items().length === 0) {
 
-  <div class="flex justify-center items-center flex-col mt-40">
+  <div class="flex justify-center items-center flex-col  ">
     <img
       src="/assets/Icons/🦆 icon _heart slash_.svg"
       class="w-44 h-44 mb-8"
@@ -20,13 +20,15 @@
   </div>
 
   } @else {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-    @for (movie of items(); track movie.id) {
-    <app-watchlist-card
-      [movie]="movie"
-      (removeFromWatchlist)="onRemove(movie)"
-    ></app-watchlist-card>
-    }
-  </div>
+<div class="grid grid-cols-2 gap-3 mx-5">
+  @for (movie of items(); track movie.id) {
+       <app-watchlist-card
+        class=""
+        [movie]="movie"
+        (removeFromWatchlist)="onRemove(movie)"
+      ></app-watchlist-card>
+   }
+</div>
+
   }
 </div>
