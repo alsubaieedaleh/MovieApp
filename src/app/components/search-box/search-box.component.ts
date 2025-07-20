@@ -1,5 +1,5 @@
 // src/app/components/search-box/search-box.component.ts
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, output, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe'; 
 
@@ -12,8 +12,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 export class SearchBoxComponent {
   searchTerm = signal('');
 
-  @Output() search = new EventEmitter<string>();
-
+  search = output<string>();
   onSearch() {
     const term = this.searchTerm().trim();
     if (term) {

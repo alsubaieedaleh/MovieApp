@@ -1,12 +1,10 @@
- <select
+<select
+  #langSelect
   class="p-1 rounded bg-primary"
-  
-  [ngModel]="currentLang.code"
-
-  (change)="changeLanguage($event)"
+  [ngModel]="currentLang().code"
+  (change)="changeLanguage(langSelect.value)"
 >
-  @for (  lang of languages; track  lang.code) {
-    <option [value]="lang.code">{{ lang.label }}</option>
+  @for ( lang of languages; track $index) {
+  <option [value]="lang.code">{{ lang.label }}</option>
   }
 </select>
- 

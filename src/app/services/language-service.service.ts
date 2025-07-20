@@ -1,54 +1,43 @@
-import { Injectable, OnInit, inject } from '@angular/core';
+// src/app/services/language.service.ts
+import { Injectable, inject, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
-export interface Language {
-  code: string;
-  label: string;
-}
+export interface Language { code: string; label: string; }
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
-  private readonly storageKey = 'app_language';
+  private readonly key = 'app_language';
+  private langSubject = new BehaviorSubject<Language>(this.load());
 
-  private langSubject = new BehaviorSubject<Language>(
-    this.loadSavedLanguage()
-  );
+   currentLang$ = this.langSubject.asObservable();
 
-  currentLang$ = this.langSubject;
+   currentLang = toSignal(this.currentLang$, { initialValue: this.load() });
 
   private router = inject(Router);
- 
+
   constructor() {
-    this.langSubject.subscribe(lang => {
-      this.applyToDocument(lang);
-    });
-     this.applyToDocument(this.langSubject.value);  
+     effect(() => this.apply(this.currentLang()));
+     this.apply(this.currentLang());
   }
 
   setLanguage(lang: Language) {
     this.langSubject.next(lang);
-    localStorage.setItem(this.storageKey, JSON.stringify(lang));
-    this.applyToDocument(lang);
-
+    localStorage.setItem(this.key, JSON.stringify(lang));
     this.router.navigateByUrl(this.router.url);
   }
 
   getLanguage(): Language {
-    return this.langSubject.value;
+    return this.currentLang();
   }
 
-  private loadSavedLanguage(): Language {
-    const saved = localStorage.getItem(this.storageKey);
-    if (saved) {
-      try {
-        return JSON.parse(saved) as Language;
-      } catch {}
-    }
-    return { code: 'en', label: 'English' };
+  private load(): Language {
+    const saved = localStorage.getItem(this.key);
+    return saved ? (JSON.parse(saved) as Language) : { code: 'en', label: 'English' };
   }
 
-  private applyToDocument(lang: Language) {
+  private apply(lang: Language) {
     document.documentElement.lang = lang.code;
     document.documentElement.dir = lang.code === 'ar' ? 'rtl' : 'ltr';
   }

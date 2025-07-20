@@ -20,7 +20,7 @@ export class TmdbWatchlistService {
   ) {
     this.initSession();
   }
- 
+  
 async getWatchlist(type: 'movies' | 'tv'): Promise<WatchlistMovie[]> {
   this.ensureSession();
   const lang = this.languageService.getLanguage().code;

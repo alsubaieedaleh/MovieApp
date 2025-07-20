@@ -8,7 +8,7 @@
       <app-loading-spinner></app-loading-spinner>
     </div>
   } @else if (movies()!.length > 0) {
-    @for (movie of movies()!; track movie.id) {
+    @for (movie of movies()!; track $index) {
       <app-card
         [movie]="movie"
         (onFavorite)="addToWatchlist(movie)"

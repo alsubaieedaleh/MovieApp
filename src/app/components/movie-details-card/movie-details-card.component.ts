@@ -1,4 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+   inject,
+   
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieDetails } from '../../models/movieDetails';
 import { Router } from '@angular/router';
@@ -11,19 +17,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./movie-details-card.component.scss'],
 })
 export class MovieDetailsCardComponent {
-  constructor(public router: Router) {}
-  /** MovieDetails object from TMDB (nullable until loaded) */
-  @Input() movie: MovieDetails | null = null;
+  router = inject(Router);
 
-  /** Emits the movie ID when user toggles favorite */
-  @Output() favoriteToggled = new EventEmitter<number>();
+  // ✅ Signal Input
+  movie = input<MovieDetails | null>(null);
 
-  /** Emits when user clicks “back” */
-  @Output() back = new EventEmitter<void>();
+  // ✅ Signal Outputs
+  favoriteToggled = output<number>();
+  back = output<void>();
 
   toggleFavorite() {
-    if (this.movie) {
-      this.favoriteToggled.emit(this.movie.id);
+    const currentMovie = this.movie();
+    if (currentMovie) {
+      this.favoriteToggled.emit(currentMovie.id);
     }
   }
 
@@ -32,7 +38,7 @@ export class MovieDetailsCardComponent {
   }
 
   get filledStars(): number {
-    return this.movie ? Math.round(this.movie.vote_average / 2) : 0;
+    return this.movie() ? Math.round(this.movie()!.vote_average / 2) : 0;
   }
 
   get starsArray(): number[] {

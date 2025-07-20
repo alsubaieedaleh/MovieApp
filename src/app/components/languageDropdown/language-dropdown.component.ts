@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Language, LanguageService } from '../../services/language-service.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-language-dropdown',
@@ -10,28 +11,27 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './language-dropdown.component.html',
   styleUrls: ['./language-dropdown.component.scss'],
 })
-export class LanguageDropdownComponent implements OnInit {
+export class LanguageDropdownComponent  {
   languages: Language[] = [
     { code: 'en', label: 'English' },
     { code: 'ar', label: 'العربية' },
     { code: 'fr', label: 'Français' },
     { code: 'zh', label: '中文' },
   ];
-  currentLang!: Language;
+   langService = inject(LanguageService);
+   currentLang = toSignal(
+    this.langService.currentLang$, 
+    { initialValue: this.langService.getLanguage() }
+  );
 
-  constructor(private langService: LanguageService) {}
+ 
+  selectedCode = signal(this.currentLang().code);
 
-  ngOnInit() {
-    this.currentLang = this.langService.getLanguage();
-     this.langService.currentLang$.subscribe(lang => this.currentLang = lang);
+  changeLanguage(code: string) {
+    const lang = this.languages.find(l => l.code === code)!;
+    this.langService.setLanguage(lang);
+    // selectedCode updates automatically via signal
+    this.selectedCode.set(code);
   }
-
- changeLanguage(event: Event) {
-  const select = event.target as HTMLSelectElement;    
-  const langCode = select.value;                        
-  const lang = this.languages.find(l => l.code === langCode)!;
-  this.langService.setLanguage(lang);
- window.location.reload(); 
-}
 
 }

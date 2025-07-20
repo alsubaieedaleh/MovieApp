@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TVShowsService } from '../services/TVServices/tvshows.service';
-import { Movie } from '../models/movie';
-import { CardComponent } from '../components/card/card.component';
-import { TmdbWatchlistService } from '../services/watchlist.service';
+import { TVShowsService } from '../../services/TVServices/tvshows.service';
+import { Movie } from '../../models/movie';
+import { CardComponent } from '../../components/card/card.component';
+import { TmdbWatchlistService } from '../../services/watchlist.service';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '../pipes/translate.pipe';
-import { LoadingSpinnerComponent } from '../components/loading/loading.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, finalize, of, startWith } from 'rxjs';
 
@@ -61,7 +61,6 @@ export class TVShowsComponent {
     }
     this.watchlistService
       .addTVToWatchlist(show.id)
-      .then(() => console.log(`"${show.title}" added to watchlist.`))
-      .catch(err => console.error('Watchlist error', err));
+       .catch(err => console.error('Watchlist error', err));
   }
 }

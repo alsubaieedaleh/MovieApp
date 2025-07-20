@@ -1,0 +1,68 @@
+<div>
+  @if (loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  } @else {
+    <!-- 📺 TV SHOWS GRID -->
+    <div class="p-6">
+      <h2 class="text-3xl font-semibold mb-4">{{ 'popularTVShows' | translate }}</h2>
+
+      <div class="flex flex-wrap gap-4">
+        @for (show of tvShows();  track $index) {
+          <app-card
+            [movie]="show"
+            (onFavorite)="addToWatchlist(show)"
+          ></app-card>
+        }
+      </div>
+
+      <!-- 📃 PAGINATION -->
+      <div class="flex justify-center items-center space-x-2 mt-6">
+        <button
+          class="p-2 rounded hover:bg-gray-100"
+          [disabled]="currentPage() === 1"
+          (click)="loadTVShows(currentPage() - 1)"
+        >
+          <svg
+            class="w-4 h-4 text-gray-700"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        @for (page of [1, 2, 3, 4, 5] ;  track $index) {
+          <button
+            class="w-8 h-8 rounded font-medium"
+            [ngClass]="{
+              'bg-primary text-black': currentPage() === page,
+              'hover:bg-gray-100 text-gray-800': currentPage() !== page
+            }"
+            (click)="loadTVShows(page)"
+          >
+            {{ page }}
+          </button>
+        }
+
+        <span class="px-2 text-gray-600">....</span>
+
+        <button
+          class="p-2 rounded hover:bg-gray-100"
+          (click)="loadTVShows(currentPage() + 1)"
+        >
+          <svg
+            class="w-4 h-4 text-gray-700"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  }
+</div>

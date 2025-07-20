@@ -1,5 +1,5 @@
 // src/app/pipes/translate.pipe.ts
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { LanguageService } from "../services/language-service.service"; 
 
 const TRANSLATIONS: Record<string, any> = {
@@ -64,14 +64,14 @@ const TRANSLATIONS: Record<string, any> = {
 @Pipe({ name: 'translate', standalone: true })
 
 export class TranslatePipe implements PipeTransform {
-  constructor(private langService: LanguageService) {}
-
+  langService= inject(LanguageService);
+ 
   transform(key: string): string {
     const langCode = this.langService.getLanguage().code;
     const translationTree = TRANSLATIONS[langCode] || {};
     // support nested keys, e.g. 'WATCHLIST.TITLE'
     const parts = key.split('.');
-    let result: any = translationTree;
+    let result  = translationTree;
     for (const part of parts) {
       result = result ? result[part] : undefined;
     }

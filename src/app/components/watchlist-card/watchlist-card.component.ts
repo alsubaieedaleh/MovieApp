@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WatchlistMovie } from '../../models/watchlist-movie';
 
@@ -10,18 +10,23 @@ import { WatchlistMovie } from '../../models/watchlist-movie';
   styleUrls: ['./watchlist-card.component.scss'],
 })
 export class WatchlistCardComponent {
-  @Input() movie!: WatchlistMovie;          
-  @Output() favoriteToggled = new EventEmitter<void>();
+   movie = input<WatchlistMovie>();
+
+   favoriteToggled = output<void>();
+  removeFromWatchlist = output<number>();
 
   isFavorite = false;
-@Output() removeFromWatchlist = new EventEmitter<number>();
 
-toggleFavorite() {
-  this.removeFromWatchlist.emit(this.movie.id);
-}
+  toggleFavorite() {
+    const currentMovie = this.movie();
+    if (currentMovie) {
+      this.removeFromWatchlist.emit(currentMovie.id);
+    }
+  }
 
-get filledStars(): number {
-    return Math.round(this.movie.rate / 20);
+  get filledStars(): number {
+    const m = this.movie();
+    return m ? Math.round(m.rate / 20) : 0;
   }
 
   get starsArray(): number[] {

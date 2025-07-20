@@ -1,13 +1,13 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { Movie } from '../models/movie';
-import { MoviesListService } from '../services/MovieServices/movies-list.service';
-import { TmdbWatchlistService } from '../services/watchlist.service';
-import { SearchService } from '../services/MovieServices/search.service';
-import { CardComponent } from '../components/card/card.component';
+import { Movie } from '../../models/movie';
+import { MoviesListService } from '../../services/MovieServices/movies-list.service';
+import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { SearchService } from '../../services/MovieServices/search.service';
+import { CardComponent } from '../../components/card/card.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '../pipes/translate.pipe';
-import { LoadingSpinnerComponent } from '../components/loading/loading.component';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of, switchMap ,startWith} from 'rxjs';
 
@@ -96,8 +96,7 @@ export class MoviesListComponent {
     }
     this.tmdbService
       .addMovieToWatchlist(movie.id)
-      .then(() => console.log(`${movie.title} added to watchlist.`))
-      .catch(err => console.error('Watchlist error', err));
+       .catch(err => console.error('Watchlist error', err));
   }
 
   goToSearch() {

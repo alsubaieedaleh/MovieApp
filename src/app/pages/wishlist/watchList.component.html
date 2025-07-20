@@ -21,7 +21,7 @@
 
   } @else {
 <div class="grid grid-cols-2 gap-3 mx-5">
-  @for (movie of items(); track movie.id) {
+  @for (movie of items(); track $index) {
        <app-watchlist-card
         class=""
         [movie]="movie"

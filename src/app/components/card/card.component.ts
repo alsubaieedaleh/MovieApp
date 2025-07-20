@@ -1,4 +1,4 @@
-import { Component , input, output } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { Movie } from '../../models/movie';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -14,9 +14,9 @@ import { TruncatePipe } from '../../pipes/truncate.pipe';
 export class CardComponent {
   movie = input.required<Movie>();
   onFavorite = output<void>();
-
+  router= inject(Router);
   isFavorite = false;  
-constructor(public router: Router) {}
+ngOnInit( ) {}
   get strokeColor(): string {
     const rate = this.movie().rate;
     if (rate >= 80) return '#22c55e';

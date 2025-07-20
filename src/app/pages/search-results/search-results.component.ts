@@ -3,13 +3,13 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, map, catchError, of, startWith, tap } from 'rxjs';
 
-import { SearchService } from '../services/MovieServices/search.service';
-import { TmdbWatchlistService } from '../services/watchlist.service';
-import { CardComponent } from '../components/card/card.component';
-import { SearchBoxComponent } from '../components/search-box/search-box.component';
+import { SearchService } from '../../services/MovieServices/search.service';
+import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { CardComponent } from '../../components/card/card.component';
+import { SearchBoxComponent } from '../../components/search-box/search-box.component';
 import { CommonModule } from '@angular/common';
-import { Movie } from '../models/movie';
-import { LoadingSpinnerComponent } from '../components/loading/loading.component';
+import { Movie } from '../../models/movie';
+import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
 
 @Component({
   selector: 'app-search-results',
@@ -60,7 +60,6 @@ export class SearchResultsComponent {
     if (movie.id == null) return;
     this.watchlistService
       .addMovieToWatchlist(movie.id)
-      .then(() => console.log(`${movie.title} added to watchlist.`))
-      .catch((err) => console.error('Watchlist error', err));
+       .catch((err) => console.error('Watchlist error', err));
   }
 }
