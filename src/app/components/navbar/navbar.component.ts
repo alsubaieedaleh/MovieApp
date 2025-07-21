@@ -5,6 +5,7 @@ import { TmdbWatchlistService } from '../../services/watchlist.service';
 import { LanguageDropdownComponent } from '../languageDropdown/language-dropdown.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -16,8 +17,7 @@ import { map } from 'rxjs';
 export class NavbarComponent   {
    tmdbWatchlist = inject(TmdbWatchlistService);
   langService = inject(LanguageService);
-   
-
+ 
    currentLangCode = toSignal(
     this.langService.currentLang$.pipe(map(lang => lang.code)),
     { initialValue: this.langService.getLanguage().code }

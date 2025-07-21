@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
- 
 
 export const routes: Routes = [
   { path: '', loadChildren: () => import('./pages/moviesList/moviesList.module.route').then(m => m.routes) },

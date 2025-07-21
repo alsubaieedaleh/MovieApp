@@ -1,4 +1,4 @@
-<div class="group relative flex bg-white rounded-2xl overflow-hidden shadow-md shadow-black/30 p-3 m-2 py-10">
+<div class="group relative flex bg-white rounded-2xl overflow-hidden shadow-md shadow-black/30 p-3 m-2 py-8">
   <!-- 🎞️ Poster -->
   <img
     [src]="movie()?.poster_path"
@@ -11,7 +11,7 @@
     
     <!-- 🎬 Title + Favorite Button -->
     <div class="flex justify-between items-start">
-      <h3 class="text-5xl font-bold leading-tight">{{ movie()?.title }}</h3>
+      <h3 class="text-5xl font-bold leading-tight">{{ movie()!.title | truncate:22}}</h3>
       <button (click)="toggleFavorite()" class="ml-2">
         <img
           [src]="'/assets/Icons/yellow icon _heart_ (1).svg'"

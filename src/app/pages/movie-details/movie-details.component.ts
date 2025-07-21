@@ -72,14 +72,7 @@ export class MovieDetailsComponent {
     { initialValue: [] }
   );
 
-  /** Computed stars */
-  get filledStars(): number {
-    return Math.round((this.movie$()?.vote_average ?? 0) / 2);
-  }
-
-  get starsArray(): number[] {
-    return Array(5).fill(0).map((_, i) => i);
-  }
+ 
 
   addToWatchlist(id: number) {
     if (!id) {

@@ -1,11 +1,11 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WatchlistMovie } from '../../models/watchlist-movie';
-
+import {TruncatePipe} from "../../pipes/truncate.pipe";
 @Component({
   selector: 'app-watchlist-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule , TruncatePipe],
   templateUrl: './watchlist-card.component.html',
   styleUrls: ['./watchlist-card.component.scss'],
 })
@@ -15,7 +15,7 @@ export class WatchlistCardComponent {
    favoriteToggled = output<void>();
   removeFromWatchlist = output<number>();
 
-  isFavorite = false;
+  isFavorite = signal<boolean>(false);
 
   toggleFavorite() {
     const currentMovie = this.movie();

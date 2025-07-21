@@ -19,11 +19,9 @@ import { Router } from '@angular/router';
 export class MovieDetailsCardComponent {
   router = inject(Router);
 
-  // ✅ Signal Input
-  movie = input<MovieDetails | null>(null);
+   movie = input<MovieDetails | null>(null);
 
-  // ✅ Signal Outputs
-  favoriteToggled = output<number>();
+   favoriteToggled = output<number>();
   back = output<void>();
 
   toggleFavorite() {
@@ -33,15 +31,12 @@ export class MovieDetailsCardComponent {
     }
   }
 
-  goBack() {
-    this.back.emit();
-  }
+ 
 
-  get filledStars(): number {
+  get filledStarsfunction(): number {
     return this.movie() ? Math.round(this.movie()!.vote_average / 2) : 0;
   }
-
-  get starsArray(): number[] {
+   get starsArray(): number[] {
     return Array(5).fill(0).map((_, i) => i);
   }
 }
