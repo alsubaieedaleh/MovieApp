@@ -33,11 +33,11 @@
       <a routerLink="/watchlist" class="font-semibold underline cursor-pointer mr-5">
         Watchlist
       </a>
-       @if (tmdbWatchlist.watchlistCount() > 0) {
+       @if ( watchlistCount() > 0) {
          <span
          class="absolute -top-2 -right-2 bg-white text-black text-xs px-2 rounded-sm"
          >
-{{         tmdbWatchlist.watchlistCount()   
+{{          watchlistCount()   
 }}        </span>
       }
     </div>

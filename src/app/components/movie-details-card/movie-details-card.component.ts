@@ -2,8 +2,9 @@ import {
   Component,
   input,
   output,
-   inject,
-   
+  signal,
+  computed,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieDetails } from '../../models/movieDetails';
@@ -20,23 +21,18 @@ export class MovieDetailsCardComponent {
   router = inject(Router);
 
    movie = input<MovieDetails | null>(null);
+  favoriteToggled = output<number>();
+ 
+   filledStars = computed(() =>
+    this.movie() ? Math.round(this.movie()!.vote_average / 2) : 0
+  );
 
-   favoriteToggled = output<number>();
-  back = output<void>();
+  starsArray = computed(() => Array(5).fill(0).map((_, i) => i));
 
-  toggleFavorite() {
+   toggleFavorite() {
     const currentMovie = this.movie();
     if (currentMovie) {
       this.favoriteToggled.emit(currentMovie.id);
     }
-  }
-
- 
-
-  get filledStarsfunction(): number {
-    return this.movie() ? Math.round(this.movie()!.vote_average / 2) : 0;
-  }
-   get starsArray(): number[] {
-    return Array(5).fill(0).map((_, i) => i);
   }
 }
