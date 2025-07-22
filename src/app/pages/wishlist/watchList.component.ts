@@ -1,9 +1,9 @@
 // src/app/components/watchlist/watchlist.component.ts
 import { Component, inject, signal, effect, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
-import { LanguageService } from '../../services/Shared/language-service.service';
-import { WatchlistMovie } from '../../models/watchlist-movie';
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
+import { LanguageService } from '../../services/shared/language-service.service';
+import { WatchlistMovie } from "../../models/movie";
 import { WatchlistCardComponent } from '../../components/watchlist-card/watchlist-card.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '../../components/loading/loading.component';

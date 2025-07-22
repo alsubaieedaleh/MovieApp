@@ -2,8 +2,8 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
- import { MovieDetails } from '../../models/movieDetails';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+ import { MovieDetails } from "../../models/movie";
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
  import { Movie } from '../../models/movie';
 import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../../components/card/card.component';

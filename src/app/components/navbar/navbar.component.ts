@@ -2,11 +2,10 @@ import {
   Component,
   computed,
   inject,
-  signal,
-} from '@angular/core';
+ } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LanguageService } from '../../services/Shared/language-service.service';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+import { LanguageService } from '../../services/shared/language-service.service';
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
 import { LanguageDropdownComponent } from '../languageDropdown/language-dropdown.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';

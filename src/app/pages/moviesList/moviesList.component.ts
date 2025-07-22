@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { Movie } from '../../models/movie';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
 import { CardComponent } from '../../components/card/card.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { LoadingSpinnerComponent } from '../../components/loading/loading.compon
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of, switchMap, startWith } from 'rxjs';
 import { MovieServices } from '../../services/movie-services';
+
 @Component({
   selector: 'app-movies-list',
   standalone: true,
@@ -25,7 +26,9 @@ export class MoviesListComponent {
   private moviesServices = inject(MovieServices);
   private tmdbService = inject(TmdbWatchlistService);
   public router = inject(Router);
-  favoriteMap = signal<Record<number, boolean>>({});
+
+  // 🔄 Use shared favoriteMovieMap signal
+  favoriteMap = this.tmdbService.favoriteMovieMap;
 
   currentPage = signal<number>(1);
   searchTerm = signal<string>('');
@@ -82,15 +85,13 @@ export class MoviesListComponent {
   );
 
   onSearch(query: string) {
-  const q = query.trim();
-  if (!q) return;
+    const q = query.trim();
+    if (!q) return;
 
-  this.searchTerm.set(q);
-  this.searchPage.set(1);
-  this.router.navigate(['/search'], { queryParams: { q } });
-
-}
-
+    this.searchTerm.set(q);
+    this.searchPage.set(1);
+    this.router.navigate(['/search'], { queryParams: { q } });
+  }
 
   loadSearchPage(page: number) {
     if (this.searchTerm().trim()) {
@@ -99,29 +100,27 @@ export class MoviesListComponent {
   }
 
   addToWatchlist(movie: Movie) {
-    if (!movie?.id) {
-      console.warn('Missing movie ID');
-      return;
-    }
+    if (!movie?.id) return;
 
-    const current = this.favoriteMap()[movie.id] || false;
-    this.favoriteMap.update((map) => ({
+    const isFav = this.favoriteMap()[movie.id] || false;
+
+    // Optimistic UI update
+    this.tmdbService.favoriteMovieMap.update((map) => ({
       ...map,
-      [movie.id]: !current,
+      [movie.id]: !isFav,
     }));
 
-    const action = current
+    const action = isFav
       ? this.tmdbService.removeMovieFromWatchlist(movie.id)
       : this.tmdbService.addMovieToWatchlist(movie.id);
 
     action.catch((err) => {
       console.error('Watchlist toggle error', err);
-      this.favoriteMap.update((map) => ({
+      // Revert if error
+      this.tmdbService.favoriteMovieMap.update((map) => ({
         ...map,
-        [movie.id]: current,
+        [movie.id]: isFav,
       }));
     });
   }
-
-   
 }

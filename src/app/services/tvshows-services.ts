@@ -3,8 +3,8 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Observable, map, catchError, of, delay, finalize, tap, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Movie } from "../models/movie";
-import { LanguageService } from "./Shared/language-service.service";
-import { MovieDetails } from "../models/movieDetails";
+import { LanguageService } from "./shared/language-service.service";
+import { MovieDetails } from "../models/movie";
 
 
 @Injectable({ providedIn: 'root' })

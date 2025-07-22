@@ -1,5 +1,4 @@
-// src/app/services/language.service.ts
-import { Injectable, inject, effect } from '@angular/core';
+ import { Injectable, inject, effect } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';

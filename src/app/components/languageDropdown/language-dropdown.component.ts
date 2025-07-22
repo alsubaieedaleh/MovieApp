@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Language, LanguageService } from '../../services/Shared/language-service.service';
+import { Language, LanguageService } from '../../services/shared/language-service.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -30,8 +30,7 @@ export class LanguageDropdownComponent  {
   changeLanguage(code: string) {
     const lang = this.languages.find(l => l.code === code)!;
     this.langService.setLanguage(lang);
-    // selectedCode updates automatically via signal
-    this.selectedCode.set(code);
+     this.selectedCode.set(code);
   }
 
 }

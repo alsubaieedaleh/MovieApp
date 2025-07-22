@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, map, catchError, of, startWith, tap } from 'rxjs';
 import { MovieServices } from '../../services/movie-services';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
 import { CardComponent } from '../../components/card/card.component';
 import { SearchBoxComponent } from '../../components/search-box/search-box.component';
 import { CommonModule } from '@angular/common';

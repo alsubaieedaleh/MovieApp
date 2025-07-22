@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 
-  import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
-import { MovieDetails } from '../../models/movieDetails';
+  import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
+import { MovieDetails } from "../../models/movie";
 import { Movie } from '../../models/movie';
 import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../../components/card/card.component';

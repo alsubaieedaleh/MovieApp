@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MovieDetails } from '../../models/movieDetails';
+import { MovieDetails } from "../../models/movie";
 import { Router } from '@angular/router';
 
 @Component({

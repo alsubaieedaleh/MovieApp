@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Movie } from '../../models/movie';
 import { CardComponent } from '../../components/card/card.component';
-import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+import { TmdbWatchlistService } from '../../services/shared/watchlist.service';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '../../components/loading/loading.component';

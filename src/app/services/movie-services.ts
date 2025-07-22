@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { signal, inject, Injectable } from '@angular/core';
 import { delay, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { MovieDetails } from '../models/movieDetails';
-import { LanguageService } from './Shared/language-service.service';
+import { MovieDetails } from "../models/movie";
+import { LanguageService } from './shared/language-service.service';
 import { Movie } from '../models/movie';
 @Injectable({ providedIn: 'root' })
 

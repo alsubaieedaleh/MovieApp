@@ -1,6 +1,6 @@
 import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WatchlistMovie } from '../../models/watchlist-movie';
+import { WatchlistMovie } from "../../models/movie";
 import {TruncatePipe} from "../../pipes/truncate.pipe";
 @Component({
   selector: 'app-watchlist-card',
