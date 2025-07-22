@@ -5,14 +5,12 @@ import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 
-import { TVShowsDetailsService } from '../../services/TVServices/tvshows-details.service';
-import { TVRecommendationsService } from '../../services/TVServices/recommendations.service';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
+  import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
 import { MovieDetails } from '../../models/movieDetails';
 import { Movie } from '../../models/movie';
 import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../../components/card/card.component';
-
+import { TvShowsServices } from '../../services/tvshows-services';
 @Component({
   selector: 'app-tvshows-details',
   standalone: true,
@@ -21,8 +19,7 @@ import { CardComponent } from '../../components/card/card.component';
   styleUrls: ['./tvshows-details.component.scss'],
 })
 export class TVShowsDetailsComponent {
-  private detailsService = inject(TVShowsDetailsService);
-  private recService = inject(TVRecommendationsService);
+   private tvShowsServices = inject(TvShowsServices);
   private watchlistService = inject(TmdbWatchlistService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -42,7 +39,7 @@ export class TVShowsDetailsComponent {
         }
         this.loading.set(true);
         this.error.set(null);
-        return this.detailsService.loadTVShowDetails(id).pipe(
+        return this.tvShowsServices.loadTVShowDetails(id).pipe(
           catchError(err => {
             console.error('Error fetching TV show:', err);
             this.error.set('Failed to load TV show details.');
@@ -60,7 +57,7 @@ export class TVShowsDetailsComponent {
       switchMap(params => {
         const id = Number(params.get('id'));
         if (!id) return of([]);
-        return this.recService.loadTVRecommendations(id).pipe(
+        return this.tvShowsServices.loadTVRecommendations(id).pipe(
           catchError(err => {
             console.error('Failed to load recommendations:', err);
             this.error.set('Failed to load recommendations');

@@ -1,9 +1,9 @@
 // src/app/services/tmdb-watchlist.service.ts
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { firstValueFrom, Observable } from 'rxjs';
-import { WatchlistMovie } from '../models/watchlist-movie';
+import { WatchlistMovie } from '../../models/watchlist-movie';
 import { LanguageService } from './language-service.service';
 
 @Injectable({ providedIn: 'root' })

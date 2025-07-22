@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { delay, switchMap, map } from 'rxjs/operators';
 import { Movie } from '../../models/movie';
-import { LanguageService } from '../language-service.service';
+import { LanguageService } from './language-service.service';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {

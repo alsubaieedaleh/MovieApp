@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { TVShowsService } from '../../services/TVServices/tvshows.service';
 import { Movie } from '../../models/movie';
 import { CardComponent } from '../../components/card/card.component';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '../../components/loading/loading.component';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, finalize, of, startWith } from 'rxjs';
-
+import { TvShowsServices } from '../../services/tvshows-services';
 @Component({
   selector: 'app-tvshows',
   standalone: true,
@@ -23,7 +23,7 @@ import { switchMap, catchError, finalize, of, startWith } from 'rxjs';
   styleUrls: ['./tvshows.component.scss'],
 })
 export class TVShowsComponent {
-  private tvShowsService    = inject(TVShowsService);
+  private tvShowsServices    = inject(TvShowsServices);
   private watchlistService  = inject(TmdbWatchlistService);
   public  router            = inject(Router);
 
@@ -38,7 +38,7 @@ export class TVShowsComponent {
 
        switchMap(page => {
         this.loading.set(true);
-        return this.tvShowsService.getPopularTVShows(page).pipe(
+        return this.tvShowsServices.getPopularTVShows(page).pipe(
           catchError(err => {
             console.error('Failed to load TV shows', err);
             return of([] as Movie[]);

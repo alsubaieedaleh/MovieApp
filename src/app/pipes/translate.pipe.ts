@@ -1,6 +1,6 @@
 // src/app/pipes/translate.pipe.ts
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { LanguageService } from "../services/language-service.service"; 
+import { LanguageService } from "../services/Shared/language-service.service"; 
 
 const TRANSLATIONS: Record<string, any> = {
   en: {

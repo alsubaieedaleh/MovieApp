@@ -2,9 +2,8 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, map, catchError, of, startWith, tap } from 'rxjs';
-
-import { SearchService } from '../../services/MovieServices/search.service';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { MovieServices } from '../../services/movie-services';
+import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
 import { CardComponent } from '../../components/card/card.component';
 import { SearchBoxComponent } from '../../components/search-box/search-box.component';
 import { CommonModule } from '@angular/common';
@@ -14,14 +13,20 @@ import { LoadingSpinnerComponent } from '../../components/loading/loading.compon
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CardComponent, CommonModule, SearchBoxComponent, RouterModule ,LoadingSpinnerComponent],
+  imports: [
+    CardComponent,
+    CommonModule,
+    SearchBoxComponent,
+    RouterModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
 })
 export class SearchResultsComponent {
   route = inject(ActivatedRoute);
   router = inject(Router);
-  searchService = inject(SearchService);
+  moviesServices = inject(MovieServices);
   watchlistService = inject(TmdbWatchlistService);
   readonly loading = signal(false);
 
@@ -34,11 +39,11 @@ export class SearchResultsComponent {
 
   searchResults = toSignal<Movie[]>(
     this.route.queryParamMap.pipe(
-       map((params) => params.get('q')?.trim() ?? ''),
-       tap(() => this.loading.set(true)),
+      map((params) => params.get('q')?.trim() ?? ''),
+      tap(() => this.loading.set(true)),
 
       switchMap((term) =>
-        term ? this.searchService.searchMovies(term, 1) : of([] as Movie[])
+        term ? this.moviesServices.searchMovies(term, 1) : of([] as Movie[])
       ),
       catchError((err) => {
         console.error('Search error:', err);
@@ -60,6 +65,6 @@ export class SearchResultsComponent {
     if (movie.id == null) return;
     this.watchlistService
       .addMovieToWatchlist(movie.id)
-       .catch((err) => console.error('Watchlist error', err));
+      .catch((err) => console.error('Watchlist error', err));
   }
 }

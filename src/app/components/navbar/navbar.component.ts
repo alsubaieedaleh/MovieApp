@@ -5,8 +5,8 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LanguageService } from '../../services/language-service.service';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
+import { LanguageService } from '../../services/Shared/language-service.service';
+import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
 import { LanguageDropdownComponent } from '../languageDropdown/language-dropdown.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';

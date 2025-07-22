@@ -2,16 +2,14 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MovieDetailsService } from '../../services/MovieServices/movie-details.service';
-import { MovieDetails } from '../../models/movieDetails';
-import { TmdbWatchlistService } from '../../services/watchlist.service';
-import { RecommendationsService } from '../../services/MovieServices/recommendations.service';
-import { Movie } from '../../models/movie';
+ import { MovieDetails } from '../../models/movieDetails';
+import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
+ import { Movie } from '../../models/movie';
 import { MovieDetailsCardComponent } from '../../components/movie-details-card/movie-details-card.component';
 import { CardComponent } from '../../components/card/card.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of, switchMap } from 'rxjs';
-
+import {MovieServices} from '../../services/movie-services';
 @Component({
   selector: 'app-movie-details',
   standalone: true,
@@ -20,18 +18,15 @@ import { catchError, finalize, of, switchMap } from 'rxjs';
   styleUrls: ['./movie-details.component.scss'],
 })
 export class MovieDetailsComponent {
-  private detailsService = inject(MovieDetailsService);
+  private movieServices = inject(MovieServices);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private watchlistService = inject(TmdbWatchlistService);
-  private recService = inject(RecommendationsService);
-
-  /** Error and loading signals */
-  error = signal<string | null>(null);
+ 
+   error = signal<string | null>(null);
   loading = signal<boolean>(true);
 
-  /** Movie details fetched via toSignal from route params */
-  movie$: Signal<MovieDetails | null> = toSignal(
+   movie$: Signal<MovieDetails | null> = toSignal(
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = Number(params.get('id'));
@@ -41,7 +36,7 @@ export class MovieDetailsComponent {
         }
         this.loading.set(true);
         this.error.set(null);
-        return this.detailsService.loadDetails(id).pipe(
+        return this.movieServices.loadDetails(id).pipe(
           catchError(err => {
             console.error('Error fetching movie:', err);
             this.error.set('Failed to load movie details.');
@@ -54,13 +49,12 @@ export class MovieDetailsComponent {
     { initialValue: null }
   );
 
-  /** Recommendations fetched reactively via toSignal */
   recommendations: Signal<Movie[]> = toSignal(
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = Number(params.get('id'));
         if (!id) return of([]);
-        return this.recService.getRecommendations(id).pipe(
+        return this.movieServices.getRecommendations(id).pipe(
           catchError(err => {
             console.error('Failed to load recommendations:', err);
             this.error.set('Failed to load recommendations');
