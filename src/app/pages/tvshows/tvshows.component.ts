@@ -28,6 +28,7 @@ export class TVShowsComponent {
   public  router            = inject(Router);
 
    currentPage = signal<number>(1);
+   favoriteMap = signal<Record<number, boolean>>({});
 
    loading = signal<boolean>(false);
 
@@ -55,12 +56,28 @@ export class TVShowsComponent {
   }
 
    addToWatchlist(show: Movie) {
-    if (!show.id) {
-      console.error('Show ID is missing');
-      return;
-    }
-    this.watchlistService
-      .addTVToWatchlist(show.id)
-       .catch(err => console.error('Watchlist error', err));
+     if (!show?.id) {
+    console.warn('Missing TV Show ID');
+    return;
   }
+
+  const current = this.favoriteMap()[show.id] || false;
+
+  this.favoriteMap.update(map => ({
+    ...map,
+    [show.id]: !current
+  }));
+
+  const action = current
+    ? this.watchlistService.removeTVFromWatchlist(show.id)
+    : this.watchlistService.addTVToWatchlist(show.id);
+
+  action.catch(err => {
+    console.error('Watchlist toggle error', err);
+     this.favoriteMap.update(map => ({
+      ...map,
+      [show.id]: current
+    }));
+  });
+}
 }

@@ -11,6 +11,8 @@
           <app-card
             [movie]="show"
             (onFavorite)="addToWatchlist(show)"
+            [isFavorite]="favoriteMap()[show.id] || false"
+
           ></app-card>
         }
       </div>
