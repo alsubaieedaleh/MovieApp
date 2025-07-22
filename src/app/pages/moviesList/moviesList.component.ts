@@ -23,6 +23,7 @@ export class MoviesListComponent {
   private tmdbService = inject(TmdbWatchlistService);
   private searchService = inject(SearchService);
   public router = inject(Router);
+  favoriteMap = signal<Record<number, boolean>>({});
 
    currentPage = signal<number>(1);
   searchTerm = signal<string>('');
@@ -91,12 +92,27 @@ export class MoviesListComponent {
 
   addToWatchlist(movie: Movie) {
     if (!movie?.id) {
-      console.warn('Missing movie ID');
-      return;
-    }
-    this.tmdbService
-      .addMovieToWatchlist(movie.id)
-       .catch(err => console.error('Watchlist error', err));
+    console.warn('Missing movie ID');
+    return;
+  }
+
+  const current = this.favoriteMap()[movie.id] || false;
+  this.favoriteMap.update(map => ({
+    ...map,
+    [movie.id]: !current
+  }));
+
+  const action = current
+    ? this.tmdbService.removeMovieFromWatchlist(movie.id)
+    : this.tmdbService.addMovieToWatchlist(movie.id);
+
+  action.catch(err => {
+    console.error('Watchlist toggle error', err);
+     this.favoriteMap.update(map => ({
+      ...map,
+      [movie.id]: current
+    }));
+  });
   }
 
   goToSearch() {

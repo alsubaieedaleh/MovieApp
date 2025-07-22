@@ -76,8 +76,7 @@ private async toggleWatchlist(
   );
 }
 
-
-  // Explicit remove methods
+ 
   async addMovieToWatchlist(movieId: number) {
     return this.toggleWatchlist('movie', movieId, true);
   }

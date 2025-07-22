@@ -46,6 +46,7 @@
         @for (movie of searchResults() ?? movies(); track $index) {
           <app-card
             [movie]="movie"
+            [isFavorite]="favoriteMap()[movie.id] || false"
             (onFavorite)="addToWatchlist(movie)"
           ></app-card>
         }

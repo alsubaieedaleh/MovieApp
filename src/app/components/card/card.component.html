@@ -63,7 +63,7 @@
 
   <button (click)="handleFavorite()">
   <img
-    [src]="isFavorite ? '/assets/Icons/yellow icon _heart_ (1).svg' : '/assets/Icons/blank heart.svg'"
+    [src]="isFavorite() ? '/assets/Icons/yellow icon _heart_ (1).svg' : '/assets/Icons/blank heart.svg'"
     alt="heart icon"
     class="w-6 h-6 mt-1"
   />

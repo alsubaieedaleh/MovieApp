@@ -15,7 +15,7 @@ export class CardComponent {
   movie = input.required<Movie>();
   onFavorite = output<void>();
   router= inject(Router);
-  isFavorite = false;  
+  isFavorite = input<boolean>();
 ngOnInit( ) {}
   get strokeColor(): string {
     const rate = this.movie().rate;
@@ -29,8 +29,7 @@ ngOnInit( ) {}
   }
 
   handleFavorite() {
-    this.isFavorite = !this.isFavorite;  
-    this.onFavorite.emit();
+     this.onFavorite.emit();
   } 
   navigateToDetails() {
     const currentUrl = this.router.url;
