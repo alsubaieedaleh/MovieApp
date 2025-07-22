@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TVShowsService } from '../../services/TVServices/tvshows.service';
 import { Movie } from '../../models/movie';
 import { CardComponent } from '../../components/card/card.component';
 import { TmdbWatchlistService } from '../../services/Shared/watchlist.service';
@@ -17,29 +16,29 @@ import { TvShowsServices } from '../../services/tvshows-services';
     CommonModule,
     CardComponent,
     TranslatePipe,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   templateUrl: './tvshows.component.html',
   styleUrls: ['./tvshows.component.scss'],
 })
 export class TVShowsComponent {
-  private tvShowsServices    = inject(TvShowsServices);
-  private watchlistService  = inject(TmdbWatchlistService);
-  public  router            = inject(Router);
+  private tvShowsServices = inject(TvShowsServices);
+  private watchlistService = inject(TmdbWatchlistService);
+  public router = inject(Router);
 
-   currentPage = signal<number>(1);
-   favoriteMap = signal<Record<number, boolean>>({});
+  currentPage = signal<number>(1);
+  favoriteMap = signal<Record<number, boolean>>({});
 
-   loading = signal<boolean>(false);
+  loading = signal<boolean>(false);
 
-   tvShows = toSignal<Movie[]>(
+  tvShows = toSignal<Movie[]>(
     toObservable(this.currentPage).pipe(
-       startWith(this.currentPage()),
+      startWith(this.currentPage()),
 
-       switchMap(page => {
+      switchMap((page) => {
         this.loading.set(true);
         return this.tvShowsServices.getPopularTVShows(page).pipe(
-          catchError(err => {
+          catchError((err) => {
             console.error('Failed to load TV shows', err);
             return of([] as Movie[]);
           }),
@@ -49,35 +48,35 @@ export class TVShowsComponent {
     )
   );
 
-   movies = () => this.tvShows();
+  movies = () => this.tvShows();
 
-   loadTVShows(page: number) {
+  loadTVShows(page: number) {
     this.currentPage.set(page);
   }
 
-   addToWatchlist(show: Movie) {
-     if (!show?.id) {
-    console.warn('Missing TV Show ID');
-    return;
-  }
+  addToWatchlist(show: Movie) {
+    if (!show?.id) {
+      console.warn('Missing TV Show ID');
+      return;
+    }
 
-  const current = this.favoriteMap()[show.id] || false;
+    const current = this.favoriteMap()[show.id] || false;
 
-  this.favoriteMap.update(map => ({
-    ...map,
-    [show.id]: !current
-  }));
-
-  const action = current
-    ? this.watchlistService.removeTVFromWatchlist(show.id)
-    : this.watchlistService.addTVToWatchlist(show.id);
-
-  action.catch(err => {
-    console.error('Watchlist toggle error', err);
-     this.favoriteMap.update(map => ({
+    this.favoriteMap.update((map) => ({
       ...map,
-      [show.id]: current
+      [show.id]: !current,
     }));
-  });
-}
+
+    const action = current
+      ? this.watchlistService.removeTVFromWatchlist(show.id)
+      : this.watchlistService.addTVToWatchlist(show.id);
+
+    action.catch((err) => {
+      console.error('Watchlist toggle error', err);
+      this.favoriteMap.update((map) => ({
+        ...map,
+        [show.id]: current,
+      }));
+    });
+  }
 }
