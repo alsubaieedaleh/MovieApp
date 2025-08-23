@@ -1,5 +1,7 @@
  # MovieApp
-=======
+In this project, the most advanced best practices in angular is applied so the performance is the best and the code is clean.
+
+You can view it using the following URL: https://movieproject-daleh.netlify.app
 # MovieApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.5.
